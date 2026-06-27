@@ -17,7 +17,7 @@ COPY backend/src /workspace/backend/src
 RUN gradle :backend:bootJar --no-daemon -x test
 
 # ── 2단계: runtime ─────────────────────────────────────────────
-FROM eclipse-temurin:21-jre-alpine AS runtime
+FROM eclipse-temurin:25-jre-alpine AS runtime
 RUN addgroup -S mneme && adduser -S mneme -G mneme
 USER mneme
 WORKDIR /app
