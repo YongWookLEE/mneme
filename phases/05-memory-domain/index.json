@@ -6,7 +6,7 @@
   "steps": [
     { "step": 1, "name": "folder-domain-rest",       "status": "completed", "summary": "FolderService(create/rename/get/listAll) + FolderController(/api/folders POST/GET/PATCH) + AuthenticatedUserResolver. 빌드/스모크/ktlint 통과" },
     { "step": 2, "name": "memory-domain-rest",       "status": "completed", "summary": "MemoryService(create/get/update[낙관적 락]/archive/restore/list/listArchived) + MemoryController + DTO. 본문 256KB 상한 + @Version 충돌 409" },
-    { "step": 3, "name": "tag-and-memory-tag",       "status": "pending" },
+    { "step": 3, "name": "tag-and-memory-tag",       "status": "completed", "summary": "TagService + TagController. 정규화 소문자, 32자, 메모리당 16개 상한" },
     { "step": 4, "name": "isolation-regression-base","status": "pending" },
     { "step": 5, "name": "handoff-phase-06-queue",   "status": "pending" }
   ]
