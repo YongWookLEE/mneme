@@ -4,7 +4,7 @@
   "goal": "backend(Spring Boot Kotlin) + frontend(Vite React) + deploy(Docker Compose) 골격 부트스트랩 + docker compose up 헬스 통과 + CI 초기",
   "milestone": "M1 — 로컬 부팅",
   "steps": [
-    { "step": 1, "name": "gradle-root-and-backend-skeleton", "status": "pending" },
+    { "step": 1, "name": "gradle-root-and-backend-skeleton", "status": "completed", "summary": "gradle 8.7 wrapper(Docker) + spring boot 3.3.4 + kotlin 1.9.25 백엔드 골격, com.mneme 13개 패키지 스캐폴딩, /actuator/health UP 확인" },
     { "step": 2, "name": "backend-smoke-test",               "status": "pending" },
     { "step": 3, "name": "frontend-vite-react-skeleton",     "status": "pending" },
     { "step": 4, "name": "docker-compose-stack",             "status": "pending" },

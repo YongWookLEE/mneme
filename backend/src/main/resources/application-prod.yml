@@ -1,0 +1,7 @@
+server:
+  forward-headers-strategy: framework
+
+logging:
+  level:
+    root: WARN
+    com.mneme: INFO
