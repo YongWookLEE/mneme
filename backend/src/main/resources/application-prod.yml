@@ -1,5 +1,9 @@
 server:
   forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        secure: true   # HTTPS 강제
 
 logging:
   level:

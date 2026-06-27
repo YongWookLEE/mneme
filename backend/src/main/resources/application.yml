@@ -36,6 +36,15 @@ server:
   port: 8080
   shutdown: graceful
   forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        name: MNEME_SESSION
+        http-only: true
+        secure: false   # 로컬 dev 기본. 운영(prod 프로파일)에서 true로 오버라이드
+        same-site: lax
+        path: /
+      timeout: 168h    # 7일 (MNEME_SESSION_TTL_HOURS 기본값)
 
 management:
   endpoints:
