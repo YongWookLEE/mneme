@@ -1,5 +1,7 @@
 package com.mneme.security
 
+import com.mneme.auth.ApiKeyGenerator
+import com.mneme.auth.ApiKeyRepository
 import com.mneme.auth.OAuth2LoginSuccessHandler
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.context.annotation.Bean
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter
@@ -29,6 +32,8 @@ class SecurityConfig {
         corsConfigurationSource: CorsConfigurationSource,
         clientRegistrationRepository: ObjectProvider<ClientRegistrationRepository>,
         successHandler: ObjectProvider<OAuth2LoginSuccessHandler>,
+        apiKeyRepository: ApiKeyRepository,
+        apiKeyGenerator: ApiKeyGenerator,
     ): SecurityFilterChain {
         http.authorizeHttpRequests { auth ->
             auth
@@ -65,6 +70,12 @@ class SecurityConfig {
             headers.xssProtection { it.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK) }
             headers.permissionsPolicy { it.policy("camera=(), microphone=(), geolocation=()") }
         }
+
+        // API Key Bearer 인증 필터 (UsernamePasswordAuthenticationFilter 앞)
+        http.addFilterBefore(
+            ApiKeyAuthenticationFilter(apiKeyRepository, apiKeyGenerator),
+            UsernamePasswordAuthenticationFilter::class.java,
+        )
 
         // OAuth2 client registration이 환경 변수로 활성화돼 있을 때만 oauth2Login 체인 등록
         val repo = clientRegistrationRepository.ifAvailable
