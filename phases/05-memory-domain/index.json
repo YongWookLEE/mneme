@@ -5,7 +5,7 @@
   "milestone": "M3 — 메모리 도메인 (검색/LLM은 phase 06~07)",
   "steps": [
     { "step": 1, "name": "folder-domain-rest",       "status": "completed", "summary": "FolderService(create/rename/get/listAll) + FolderController(/api/folders POST/GET/PATCH) + AuthenticatedUserResolver. 빌드/스모크/ktlint 통과" },
-    { "step": 2, "name": "memory-domain-rest",       "status": "pending" },
+    { "step": 2, "name": "memory-domain-rest",       "status": "completed", "summary": "MemoryService(create/get/update[낙관적 락]/archive/restore/list/listArchived) + MemoryController + DTO. 본문 256KB 상한 + @Version 충돌 409" },
     { "step": 3, "name": "tag-and-memory-tag",       "status": "pending" },
     { "step": 4, "name": "isolation-regression-base","status": "pending" },
     { "step": 5, "name": "handoff-phase-06-queue",   "status": "pending" }
