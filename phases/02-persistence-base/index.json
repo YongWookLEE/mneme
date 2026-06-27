@@ -5,7 +5,7 @@
   "milestone": "M1 — 로컬 부팅 마무리",
   "steps": [
     { "step": 1, "name": "persistence-deps-and-config",        "status": "completed", "summary": "JPA+Postgres+Flyway+pgvector+HikariCP 의존성, application.yml DataSource/JPA/Flyway/Hikari 설정, test 프로파일 H2(smoke용). build + smoke test PASSED" },
-    { "step": 2, "name": "flyway-v1-init-schema",              "status": "pending" },
+    { "step": 2, "name": "flyway-v1-init-schema",              "status": "completed", "summary": "V1__init.sql 작성(13 테이블 + vector/pg_trgm + ivfflat 인덱스 + tsv 트리거). compose postgres 수동 적용 검증 통과. Testcontainers IT는 docker-java 호환 이슈로 phase 05/08 재도입 예약" },
     { "step": 3, "name": "id-utility-uuid-v7-base32",          "status": "pending" },
     { "step": 4, "name": "domain-entities",                    "status": "pending" },
     { "step": 5, "name": "repositories-and-isolation-base",    "status": "pending" },
