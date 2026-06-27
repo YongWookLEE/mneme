@@ -7,7 +7,7 @@
     { "step": 1, "name": "persistence-deps-and-config",        "status": "completed", "summary": "JPA+Postgres+Flyway+pgvector+HikariCP 의존성, application.yml DataSource/JPA/Flyway/Hikari 설정, test 프로파일 H2(smoke용). build + smoke test PASSED" },
     { "step": 2, "name": "flyway-v1-init-schema",              "status": "completed", "summary": "V1__init.sql 작성(13 테이블 + vector/pg_trgm + ivfflat 인덱스 + tsv 트리거). compose postgres 수동 적용 검증 통과. Testcontainers IT는 docker-java 호환 이슈로 phase 05/08 재도입 예약" },
     { "step": 3, "name": "id-utility-uuid-v7-base32",          "status": "completed", "summary": "com.mneme.id: UuidV7 + Base32Crockford(26자) + PrefixedId(11 prefix) + IdFactory @Component. 단위 테스트 3개 클래스 PASSED, ktlint 통과" },
-    { "step": 4, "name": "domain-entities",                    "status": "pending" },
+    { "step": 4, "name": "domain-entities",                    "status": "completed", "summary": "User/ApiKey + Folder/Memory/MemoryLink/Tag/MemoryTag JPA 엔티티. Memory에 @Version 낙관적 락. embedding/tsv는 phase 06에서 매핑. 컴파일 + ktlint + smoke 통과" },
     { "step": 5, "name": "repositories-and-isolation-base",    "status": "pending" },
     { "step": 6, "name": "handoff-and-changelog",              "status": "pending" }
   ]
