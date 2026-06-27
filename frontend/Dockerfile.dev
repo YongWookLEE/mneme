@@ -1,0 +1,14 @@
+# syntax=docker/dockerfile:1.7
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY frontend/package.json frontend/package-lock.json* /app/
+RUN npm install --no-audit --no-fund
+
+COPY frontend /app
+
+EXPOSE 5173
+
+# vite는 컨테이너 내부 0.0.0.0 바인딩 필요
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

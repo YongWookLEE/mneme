@@ -1,0 +1,71 @@
+name: mneme
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mneme
+      POSTGRES_USER: ${MNEME_DB_USER:-mneme}
+      POSTGRES_PASSWORD: ${MNEME_DB_PASSWORD:?MNEME_DB_PASSWORD 환경변수가 필요합니다}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${MNEME_DB_USER:-mneme} -d mneme"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    networks:
+      - mneme
+
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      MNEME_BASE_URL: ${MNEME_BASE_URL:-http://localhost:8080}
+      MNEME_FRONTEND_ORIGIN: ${MNEME_FRONTEND_ORIGIN:-http://localhost:5173}
+      MNEME_DB_URL: jdbc:postgresql://postgres:5432/mneme
+      MNEME_DB_USER: ${MNEME_DB_USER:-mneme}
+      MNEME_DB_PASSWORD: ${MNEME_DB_PASSWORD}
+      MNEME_GOOGLE_OAUTH_CLIENT_ID: ${MNEME_GOOGLE_OAUTH_CLIENT_ID:-}
+      MNEME_GOOGLE_OAUTH_CLIENT_SECRET: ${MNEME_GOOGLE_OAUTH_CLIENT_SECRET:-}
+      MNEME_OPENAI_API_KEY: ${MNEME_OPENAI_API_KEY:-}
+      MNEME_OPENAI_EMBED_MODEL: ${MNEME_OPENAI_EMBED_MODEL:-text-embedding-3-small}
+      MNEME_OPENAI_LLM_MODEL: ${MNEME_OPENAI_LLM_MODEL:-gpt-4o-mini}
+      JAVA_OPTS: ${JAVA_OPTS:--Xmx1g}
+    ports:
+      - "8080:8080"
+    networks:
+      - mneme
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - mneme
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  mneme:
+    driver: bridge

@@ -1,0 +1,26 @@
+# 로컬 개발/단순 셀프호스팅 기본값.
+# 운영 도메인 확정 후 phase 30(hosting-decision)에서 도메인 + 자동 HTTPS로 교체.
+
+{
+    auto_https off
+}
+
+:80 {
+    # 백엔드로 라우팅할 경로 (REST + Actuator + MCP)
+    @backend path /api/* /actuator/* /mcp/* /oauth/*
+    handle @backend {
+        reverse_proxy backend:8080
+    }
+
+    # 프론트엔드 dev 서버 (Vite HMR 포함)
+    handle {
+        reverse_proxy frontend-dev:5173
+    }
+
+    encode gzip
+
+    log {
+        output stdout
+        format console
+    }
+}
