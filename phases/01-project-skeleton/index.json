@@ -6,7 +6,7 @@
   "steps": [
     { "step": 1, "name": "gradle-root-and-backend-skeleton", "status": "completed", "summary": "gradle 8.7 wrapper(Docker) + spring boot 3.3.4 + kotlin 1.9.25 백엔드 골격, com.mneme 13개 패키지 스캐폴딩, /actuator/health UP 확인" },
     { "step": 2, "name": "backend-smoke-test",               "status": "completed", "summary": "MnemeApplicationSmokeTest 2개 케이스(context-load + /actuator/health UP) PASSED" },
-    { "step": 3, "name": "frontend-vite-react-skeleton",     "status": "pending" },
+    { "step": 3, "name": "frontend-vite-react-skeleton",     "status": "completed", "summary": "vite 5 + react 18 + ts 5 + tailwind 3 + vitest 1 스모크 PASSED, build dist 생성, lint/typecheck 통과" },
     { "step": 4, "name": "docker-compose-stack",             "status": "pending" },
     { "step": 5, "name": "compose-health-verification",      "status": "pending" },
     { "step": 6, "name": "github-actions-ci-and-handoff",    "status": "pending" }
