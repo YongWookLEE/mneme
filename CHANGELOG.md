@@ -13,6 +13,13 @@
 - MIT 라이선스
 - MVP 정체성 확장: 본문 `[[wiki-link]]` 파싱 + `/map` 그래프 + `/archive` + `/keys` MCP 명령 빌더 (ADR-018, ADR-019)
 - phase 16 wiki-link-parser, phase 17 memory-map-ui
+- Phase 01 project-skeleton:
+  - Gradle 8.7 + Kotlin 1.9.25 + Spring Boot 3.3.4 백엔드 모듈
+  - Vite 5 + React 18 + TypeScript 5 + Tailwind 3 프론트엔드 모듈
+  - Docker Compose 스택: postgres(pgvector pg16) + backend + frontend-dev + caddy
+  - GitHub Actions CI: ktlint, JUnit + Kotest, ESLint, Vitest, build 검증
+  - 백엔드 스모크 테스트, 프론트엔드 App 렌더 테스트
+- 디자인 정책: 중립 모노크롬 다크 테마 확정(`docs/design/` 참고 이미지 2장 추가)
 
 ### Changed
 - 프로젝트명을 `unified-memory` → `Mneme`로 변경
@@ -23,7 +30,7 @@
 ### 향후 마일스톤 (미릴리즈)
 
 #### M1 — 로컬 부팅
-- phase 01-02 완료 시 0.1.0 후보
+- phase 01 ✅ / phase 02 (persistence-base) 진행 시 0.1.0 후보
 
 #### M5 — MCP 라이브
 - phase 09-10 완료 시 0.5.0 후보
