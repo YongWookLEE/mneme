@@ -8,6 +8,6 @@
     { "step": 2, "name": "google-oauth2-client",         "status": "completed", "summary": "Conditional ClientRegistrationRepository(MNEME_GOOGLE_OAUTH_CLIENT_ID 비어있으면 빈 미생성) + OAuth2LoginSuccessHandler(googleSub upsert + email/locale 동기화) + SecurityConfig.oauth2Login 조건부 등록. 키 없이 부팅 OK. 스모크/ktlint 통과" },
     { "step": 3, "name": "session-csrf-headers-cors",    "status": "completed", "summary": "세션 쿠키(MNEME_SESSION, HttpOnly, SameSite=Lax, prod에서 Secure), CSRF(CookieCsrfTokenRepository), CORS allowlist(MNEME_FRONTEND_ORIGIN), 보안 헤더(CSP/HSTS/XFO=DENY/Referrer-Policy/XSS/Permissions-Policy). 빌드/스모크/ktlint 통과" },
     { "step": 4, "name": "i18n-error-codes",             "status": "completed", "summary": "ApiError enum(ERR_*) + GlobalExceptionHandler(@RestControllerAdvice, ProblemDetail 응답) + i18n/errors_ko.properties + 기본 영문 errors.properties. MessageSource basename 등록. 빌드/스모크/ktlint 통과" },
-    { "step": 5, "name": "handoff-blocked-live-verify",  "status": "pending" }
+    { "step": 5, "name": "handoff-blocked-live-verify",  "status": "completed", "summary": "HANDOFF + CHANGELOG 갱신. 라이브 OAuth 검증은 사용자 GCP Console에서 OAuth Client 발급 + .env 입력 필요. phase 04 큐" }
   ]
 }

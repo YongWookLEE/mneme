@@ -27,6 +27,14 @@
   - 도메인 엔티티: User, ApiKey, Folder, Memory(@Version), MemoryLink, Tag, MemoryTag
   - JPA 리포지토리 7개: 모든 조회 메서드 첫 인자 userId 강제 (격리 시그니처 기반)
   - 단위 테스트: id 모듈 3개 클래스 PASSED, smoke 유지
+- Phase 03 auth-google-oauth (코드 완료, 라이브 검증 사용자 액션 대기):
+  - Spring Security 5 + OAuth2 client 의존성, SecurityConfig 기본 필터 체인
+  - Conditional Google ClientRegistrationRepository (env 비어 있으면 빈 미생성)
+  - OAuth2LoginSuccessHandler: Google sub → users 테이블 upsert
+  - 세션 쿠키 MNEME_SESSION(HttpOnly + SameSite=Lax, prod Secure)
+  - CSRF(CookieCsrfTokenRepository), CORS allowlist(MNEME_FRONTEND_ORIGIN)
+  - 보안 헤더 CSP/X-Frame-Options/X-Content-Type-Options/Referrer-Policy/Permissions-Policy
+  - ApiError enum + GlobalExceptionHandler(ProblemDetail/RFC 7807) + i18n/errors_ko.properties
 
 ### Changed
 - 프로젝트명을 `unified-memory` → `Mneme`로 변경
