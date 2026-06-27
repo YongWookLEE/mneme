@@ -1,0 +1,14 @@
+{
+  "project": "Mneme",
+  "phase": "04-api-keys",
+  "goal": "mn_ prefix API 키 발급(평문 1회 노출) + sha256 해시 저장 + Bearer 인증 필터 + 폐기/회전/이름 수정 REST + 감사 로그. 대시보드 UI는 phase 11에서 본 백엔드 API 사용.",
+  "milestone": "M2 — 인증 완성",
+  "steps": [
+    { "step": 1, "name": "api-key-generator",        "status": "completed", "summary": "ApiKeyGenerator: mn_<base62 32B> 평문 + sha256 해시 + 앞 8자 식별 prefix + constant-time verify. 단위 테스트 5개 PASSED" },
+    { "step": 2, "name": "api-key-service",          "status": "pending" },
+    { "step": 3, "name": "api-key-rest",             "status": "pending" },
+    { "step": 4, "name": "api-key-auth-filter",      "status": "pending" },
+    { "step": 5, "name": "audit-event-base",         "status": "pending" },
+    { "step": 6, "name": "handoff-phase-05-queue",   "status": "pending" }
+  ]
+}
