@@ -1,0 +1,14 @@
+{
+  "project": "Mneme",
+  "phase": "02-persistence-base",
+  "goal": "PostgreSQL+pgvector 단일 DB 위에 Flyway V1 스키마(13 테이블 + 확장 + 인덱스 + tsv 트리거), JPA 엔티티(MVP 핵심), user_id 강제 리포지토리, Testcontainers 통합 테스트 인프라까지. backend 부팅 시 마이그레이션 자동 적용 + Hikari 풀.",
+  "milestone": "M1 — 로컬 부팅 마무리",
+  "steps": [
+    { "step": 1, "name": "persistence-deps-and-config",        "status": "completed", "summary": "JPA+Postgres+Flyway+pgvector+HikariCP 의존성, application.yml DataSource/JPA/Flyway/Hikari 설정, test 프로파일 H2(smoke용). build + smoke test PASSED" },
+    { "step": 2, "name": "flyway-v1-init-schema",              "status": "pending" },
+    { "step": 3, "name": "id-utility-uuid-v7-base32",          "status": "pending" },
+    { "step": 4, "name": "domain-entities",                    "status": "pending" },
+    { "step": 5, "name": "repositories-and-isolation-base",    "status": "pending" },
+    { "step": 6, "name": "handoff-and-changelog",              "status": "pending" }
+  ]
+}
