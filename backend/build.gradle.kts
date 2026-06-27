@@ -32,7 +32,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:junit-jupiter:1.20.2")
     testImplementation("org.testcontainers:postgresql:1.20.2")
-    testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("com.ninja-squad:springmockk:5.0.1")
     testImplementation("io.kotest:kotest-assertions-core:5.9.1")
     testRuntimeOnly("com.h2database:h2:2.3.232")
 }
