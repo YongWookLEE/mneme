@@ -1,0 +1,11 @@
+{
+  "project": "{PROJECT_NAME}",
+  "phase": "{phase-name}",
+  "steps": [
+    {
+      "step": 0,
+      "name": "example-step",
+      "status": "pending"
+    }
+  ]
+}

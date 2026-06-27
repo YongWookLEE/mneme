@@ -1,0 +1,14 @@
+{
+  "project": "Mneme",
+  "phase": "01-project-skeleton",
+  "goal": "backend(Spring Boot Kotlin) + frontend(Vite React) + deploy(Docker Compose) 골격 부트스트랩 + docker compose up 헬스 통과 + CI 초기",
+  "milestone": "M1 — 로컬 부팅",
+  "steps": [
+    { "step": 1, "name": "gradle-root-and-backend-skeleton", "status": "pending" },
+    { "step": 2, "name": "backend-smoke-test",               "status": "pending" },
+    { "step": 3, "name": "frontend-vite-react-skeleton",     "status": "pending" },
+    { "step": 4, "name": "docker-compose-stack",             "status": "pending" },
+    { "step": 5, "name": "compose-health-verification",      "status": "pending" },
+    { "step": 6, "name": "github-actions-ci-and-handoff",    "status": "pending" }
+  ]
+}

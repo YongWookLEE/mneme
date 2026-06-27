@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "exec_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 scripts/hooks/codex-dangerous-cmd-guard.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "scripts/hooks/codex-stop-check.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

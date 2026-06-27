@@ -1,0 +1,40 @@
+# 환경/비밀
+deploy/.env
+deploy/.env.*
+!deploy/.env.example
+.env
+*.local
+
+# 빌드 산출물
+backend/build/
+backend/.gradle/
+frontend/dist/
+frontend/node_modules/
+frontend/.vite/
+
+# IDE / 에이전트 로컬 설정
+.idea/
+.vscode/
+*.iml
+.claude/settings.local.json
+.codex/settings.local.json
+
+# Gradle 루트
+.gradle/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 로그
+logs/
+*.log
+
+# 백업/임시
+*.bak
+*.tmp
+*.swp
+
+# Docker 데이터
+deploy/data/
