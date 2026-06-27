@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # ── 1단계: gradle 빌드 ─────────────────────────────────────────
-FROM gradle:8.7-jdk21 AS builder
+FROM gradle:9.6-jdk21 AS builder
 WORKDIR /workspace
 
 # 의존성 캐시를 위해 gradle 파일만 먼저 복사
