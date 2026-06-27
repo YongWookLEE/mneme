@@ -20,6 +20,13 @@
   - GitHub Actions CI: ktlint, JUnit + Kotest, ESLint, Vitest, build 검증
   - 백엔드 스모크 테스트, 프론트엔드 App 렌더 테스트
 - 디자인 정책: 중립 모노크롬 다크 테마 확정(`docs/design/` 참고 이미지 2장 추가)
+- Phase 02 persistence-base:
+  - JPA + Flyway + pgvector-java + HikariCP 의존성 도입
+  - Flyway V1__init.sql: 13 테이블, vector/pg_trgm 확장, ivfflat 임베딩 인덱스, tsv 트리거
+  - id 모듈: UUID v7 생성기 + Crockford Base32(26자) + PrefixedId(11 prefix) + IdFactory
+  - 도메인 엔티티: User, ApiKey, Folder, Memory(@Version), MemoryLink, Tag, MemoryTag
+  - JPA 리포지토리 7개: 모든 조회 메서드 첫 인자 userId 강제 (격리 시그니처 기반)
+  - 단위 테스트: id 모듈 3개 클래스 PASSED, smoke 유지
 
 ### Changed
 - 프로젝트명을 `unified-memory` → `Mneme`로 변경
@@ -30,7 +37,7 @@
 ### 향후 마일스톤 (미릴리즈)
 
 #### M1 — 로컬 부팅
-- phase 01 ✅ / phase 02 (persistence-base) 진행 시 0.1.0 후보
+- phase 01 ✅ / phase 02 ✅ → 0.1.0 후보 도달
 
 #### M5 — MCP 라이브
 - phase 09-10 완료 시 0.5.0 후보
