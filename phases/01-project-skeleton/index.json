@@ -8,7 +8,7 @@
     { "step": 2, "name": "backend-smoke-test",               "status": "completed", "summary": "MnemeApplicationSmokeTest 2개 케이스(context-load + /actuator/health UP) PASSED" },
     { "step": 3, "name": "frontend-vite-react-skeleton",     "status": "completed", "summary": "vite 5 + react 18 + ts 5 + tailwind 3 + vitest 1 스모크 PASSED, build dist 생성, lint/typecheck 통과" },
     { "step": 4, "name": "docker-compose-stack",             "status": "completed", "summary": "postgres pgvector/backend/frontend-dev/caddy compose 4서비스 + healthcheck + Caddyfile 검증 통과" },
-    { "step": 5, "name": "compose-health-verification",      "status": "pending" },
+    { "step": 5, "name": "compose-health-verification",      "status": "completed", "summary": "5종 헬스 통과: backend/actuator UP, frontend Mneme, caddy→backend, caddy→frontend, postgres pg_isready" },
     { "step": 6, "name": "github-actions-ci-and-handoff",    "status": "pending" }
   ]
 }
