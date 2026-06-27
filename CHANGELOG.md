@@ -35,6 +35,12 @@
   - CSRF(CookieCsrfTokenRepository), CORS allowlist(MNEME_FRONTEND_ORIGIN)
   - 보안 헤더 CSP/X-Frame-Options/X-Content-Type-Options/Referrer-Policy/Permissions-Policy
   - ApiError enum + GlobalExceptionHandler(ProblemDetail/RFC 7807) + i18n/errors_ko.properties
+- Phase 04 api-keys:
+  - ApiKeyGenerator: mn_<base62 32B> 평문 + sha256 해시 + 8자 식별 prefix + constant-time verify
+  - ApiKeyService: issue/listActive/revoke/rename/rotate
+  - REST: POST/GET/PATCH/DELETE /api/keys, POST /api/keys/{extId}/rotate (평문 1회 IssueResponse)
+  - ApiKeyAuthenticationFilter (Bearer mn_): prefix 후보 → keyHash verify → SecurityContext
+  - AuditEvent 엔티티 + AuditPublisher(REQUIRES_NEW @Transactional), key.created/revoked 기록
 
 ### Changed
 - 프로젝트명을 `unified-memory` → `Mneme`로 변경
