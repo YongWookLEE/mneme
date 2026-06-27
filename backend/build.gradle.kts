@@ -15,6 +15,8 @@ java {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
@@ -27,6 +29,7 @@ dependencies {
         exclude(group = "org.mockito", module = "mockito-core")
     }
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:junit-jupiter:1.20.2")
     testImplementation("org.testcontainers:postgresql:1.20.2")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
