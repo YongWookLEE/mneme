@@ -41,6 +41,12 @@
   - REST: POST/GET/PATCH/DELETE /api/keys, POST /api/keys/{extId}/rotate (평문 1회 IssueResponse)
   - ApiKeyAuthenticationFilter (Bearer mn_): prefix 후보 → keyHash verify → SecurityContext
   - AuditEvent 엔티티 + AuditPublisher(REQUIRES_NEW @Transactional), key.created/revoked 기록
+- Phase 05 memory-domain:
+  - FolderService + /api/folders REST (materialized path 자동, 이름 중복 409)
+  - MemoryService + /api/memories REST: create/get/update(@Version 낙관적 락)/archive/restore/list, 본문 256KB 상한
+  - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
+  - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
+  - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
 
 ### Changed
 - 프로젝트명을 `unified-memory` → `Mneme`로 변경

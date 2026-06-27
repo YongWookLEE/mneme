@@ -8,6 +8,6 @@
     { "step": 2, "name": "memory-domain-rest",       "status": "completed", "summary": "MemoryService(create/get/update[낙관적 락]/archive/restore/list/listArchived) + MemoryController + DTO. 본문 256KB 상한 + @Version 충돌 409" },
     { "step": 3, "name": "tag-and-memory-tag",       "status": "completed", "summary": "TagService + TagController. 정규화 소문자, 32자, 메모리당 16개 상한" },
     { "step": 4, "name": "isolation-regression-base","status": "completed", "summary": "IsolationRegressionTest 단위 베이스(folder/memory/tag service): 다른 userId 접근 시 404 검증. REST 전수 회귀는 phase 08에서" },
-    { "step": 5, "name": "handoff-phase-06-queue",   "status": "pending" }
+    { "step": 5, "name": "handoff-phase-06-queue",   "status": "completed", "summary": "HANDOFF + CHANGELOG 갱신. phase 06 큐(OpenAI 키 라이브 검증 필요 안내)" }
   ]
 }
