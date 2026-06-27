@@ -1,6 +1,7 @@
 package com.mneme.auth
 
 import com.mneme.id.IdFactory
+import com.mneme.observability.AuditPublisher
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +21,7 @@ class ApiKeyService(
     private val apiKeyRepository: ApiKeyRepository,
     private val generator: ApiKeyGenerator,
     private val idFactory: IdFactory,
+    private val auditPublisher: AuditPublisher,
 ) {
     private val log = LoggerFactory.getLogger(ApiKeyService::class.java)
 
@@ -43,6 +45,13 @@ class ApiKeyService(
             )
         apiKeyRepository.save(key)
         log.info("API key issued: userId={}, keyId={}, prefix={}", userId, key.id, key.prefix)
+        auditPublisher.record(
+            userId = userId,
+            actorKind = "user",
+            action = "key.created",
+            targetKind = "api_key",
+            targetId = key.id.toString(),
+        )
         return IssuedKey(plaintext = generated.plaintext, key = key)
     }
 
@@ -59,6 +68,13 @@ class ApiKeyService(
         if (key.revokedAt != null) return true
         key.revokedAt = OffsetDateTime.now()
         log.info("API key revoked: userId={}, keyId={}", userId, key.id)
+        auditPublisher.record(
+            userId = userId,
+            actorKind = "user",
+            action = "key.revoked",
+            targetKind = "api_key",
+            targetId = key.id.toString(),
+        )
         return true
     }
 

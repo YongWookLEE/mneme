@@ -7,8 +7,8 @@
     { "step": 1, "name": "api-key-generator",        "status": "completed", "summary": "ApiKeyGenerator: mn_<base62 32B> 평문 + sha256 해시 + 앞 8자 식별 prefix + constant-time verify. 단위 테스트 5개 PASSED" },
     { "step": 2, "name": "api-key-service",          "status": "completed", "summary": "ApiKeyService(@Service @Transactional): issue/listActive/revoke/rename/rotate. 14일 grace는 phase 08 이관" },
     { "step": 3, "name": "api-key-rest",             "status": "completed", "summary": "ApiKeyController /api/keys: POST(평문 1회) / GET / PATCH / DELETE / POST rotate. extId=key_<base32>. OAuth2User principal에서 google sub로 user 조회" },
-    { "step": 4, "name": "api-key-auth-filter",      "status": "pending" },
-    { "step": 5, "name": "audit-event-base",         "status": "pending" },
+    { "step": 4, "name": "api-key-auth-filter",      "status": "completed", "summary": "ApiKeyAuthenticationFilter(OncePerRequestFilter)에서 Bearer mn_ 헤더 → prefix 후보 조회 → keyHash 검증 → ApiKeyAuthenticationToken(userId 주체) 주입 + lastUsedAt 갱신. UsernamePassword 필터 앞에 등록" },
+    { "step": 5, "name": "audit-event-base",         "status": "completed", "summary": "AuditEvent 엔티티(audit_events) + AuditEventRepository + AuditPublisher(REQUIRES_NEW @Transactional). ApiKeyService에 주입해 key.created/key.revoked 기록" },
     { "step": 6, "name": "handoff-phase-05-queue",   "status": "pending" }
   ]
 }
