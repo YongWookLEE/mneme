@@ -77,7 +77,7 @@ Mneme는 백엔드 단일 프로세스(Spring Boot)와 SPA 프론트엔드(React
 ## 모듈 경계
 
 - `auth`: Google OAuth 콜백, 세션 발급, API 키 발급·해시·검증·회전, DCR 엔드포인트, 감사 이벤트 발행
-- `memory`: Memory/Folder/Tag 엔티티 관리. **모든 메서드 user_id 첫 인자 강제**
+- `memory`: Memory/Folder/Tag/MemoryLink 엔티티 관리. 본문 `[[wiki-link]]` 파서 포함(메모리 저장/수정 트랜잭션 내 동기 호출). **모든 메서드 user_id 첫 인자 강제**
 - `llm`: Spring AI OpenAI 어댑터. 시스템 프롬프트 상수, 사용자 입력은 인용 블록으로 감쌈
 - `search`: 하이브리드 검색. SQL은 prepared statement, user_id 조건 누락 거부
 - `mcp`: 11개 `mn_*` 도구를 `@Tool`로 등록. Streamable HTTP. Bearer 인증
@@ -147,9 +147,20 @@ backend의 OpenAI/Google 연결성은 lazy — 첫 요청 시 검증. 시작 시
 5. `llm`: 분류·요약·임베딩·태그 추출 병렬 호출. 시스템 프롬프트와 사용자 입력 명확히 분리
 6. `observability`: OpenAI 호출 토큰 수 집계, 사용자별 일일 한도 초과 시 호출 차단(429)
 7. UUID v7 ID 생성 → INSERT `memories` (user_id, folder_id, ...). tsvector 트리거 자동 갱신
-8. 트랜잭션 커밋
-9. `auth`: 감사 이벤트(memory.created) 비동기 기록
-10. 응답: `{id, path, title, summary, tags}`
+8. **본문 `[[wiki-link]]` 파싱** → `memory_links` 동기 갱신(트랜잭션 내). 기존 backlink 중 본문에서 사라진 것 삭제, 새로 추가된 것 INSERT, 제목 매칭 실패는 `target_id = NULL`(깨진 링크)로 기록
+9. 트랜잭션 커밋
+10. `auth`: 감사 이벤트(memory.created, links: N) 비동기 기록
+11. 응답: `{id, path, title, summary, tags, links: { outgoing: N, broken: M }}`
+
+### 메모리 제목 변경 시 backlink 일관성
+
+- 제목 변경은 `mn_update`의 일부. 트랜잭션 안에서:
+  1. `memories.title` UPDATE
+  2. `memory_links WHERE target_id = :id` 조회 → 영향 받는 `source_id` 목록
+  3. 각 source 본문에서 옛 `[[옛 제목]]`을 새 `[[새 제목]]`으로 치환(정확 매칭만, 다른 의미 텍스트 안 건드림)
+  4. source 메모리들의 `memory_links.target_label` 갱신
+  5. tsvector 재계산 트리거 (source 메모리들에 대해)
+- 영향 메모리 수가 많으면(예: > 50) 응답에 `affected_count` 포함해 사용자 확인 UI 표시
 
 ### 검색 (search)
 
@@ -305,13 +316,20 @@ memory_tags (
   PRIMARY KEY (memory_id, tag_id)
 )
 
--- 메모리 링크 (wiki-link, 후속 단계)
+-- 메모리 링크 (본문 [[wiki-link]] 파싱 결과, MVP 핵심)
+-- 본문이 진실, 이 테이블은 파생 인덱스. 본문 저장 시 트랜잭션 내에서 동기 갱신
 memory_links (
   id              UUID PRIMARY KEY,
+  user_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   source_id       UUID NOT NULL REFERENCES memories(id) ON DELETE CASCADE,
-  target_id       UUID NOT NULL REFERENCES memories(id) ON DELETE CASCADE,
-  kind            TEXT NOT NULL                     -- 'wiki' / 'auto' / ...
+  target_id       UUID REFERENCES memories(id) ON DELETE SET NULL,  -- NULL = 깨진 링크
+  target_label    TEXT NOT NULL,                    -- 본문에 적힌 [[...]] 원문(제목 또는 mem_id)
+  kind            TEXT NOT NULL DEFAULT 'wiki',     -- 'wiki' (본문 [[link]]). 'auto'는 후속 phase 예약
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 )
+INDEX memory_links_user_source_idx ON memory_links(user_id, source_id);
+INDEX memory_links_user_target_idx ON memory_links(user_id, target_id);
+INDEX memory_links_broken_idx ON memory_links(user_id) WHERE target_id IS NULL;
 
 -- 메모리 버전 (수정 이력)
 memory_versions (

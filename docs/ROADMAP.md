@@ -9,9 +9,10 @@
 - **M3 — 메모리 도메인**: REST로 메모리 CRUD + 자동 분류·요약·임베딩·하이브리드 검색 (phase 05~07)
 - **M4 — 보안 완전**: rate limit, 토큰 사용량, 격리 테스트, 보안 헤더 (phase 08)
 - **M5 — MCP 라이브**: 11개 도구가 Claude.ai에서 실제로 호출됨 (phase 09~10)
-- **M6 — 대시보드 사용 가능**: 폴더 트리·미리보기·편집·검색·온보딩·연결 가이드 (phase 11~12)
+- **M6 — 대시보드 사용 가능**: 폴더 트리·미리보기·편집·검색·온보딩·연결 가이드·archive·키 빌더 (phase 11~12)
+- **M6.5 — 위키 경험**: 본문 `[[link]]` 파싱·backlink·`/map` 그래프 (phase 16~17)
 - **M7 — 포터빌리티·운영**: export/import + 관측성 + 클라이언트 검증 (phase 13~15)
-- **M8 — Wiki 확장**: `[[link]]`, lint, folder index (phase 20~23)
+- **M8 — Wiki 확장**: lint, folder index, review feedback (phase 21~23)
 - **M9 — 운영 안착**: 호스팅, 셀프호스팅 가이드, 백업, 사용량 알림 (phase 30~33)
 
 ## 범위 1: MVP (Heirmos 핵심 + 보안·관측·포터빌리티 기본)
@@ -29,20 +30,23 @@
 | 08 security-controls | pending | rate limit(token bucket) + 토큰 사용량 추적/한도 + PII 로그 마스킹 + 보안 회귀 테스트 확장 | `phases/08-security-controls/` |
 | 09 mcp-server | pending | Spring AI MCP starter + 11개 `mn_*` 도구 등록 + 도구 단위 격리 테스트 | `phases/09-mcp-server/` |
 | 10 mcp-oauth-dcr | pending | DCR 엔드포인트(/oauth/register) + Authorization Code 흐름 + access/refresh token | `phases/10-mcp-oauth-dcr/` |
-| 11 dashboard-ui | pending | 폴더 트리, 마크다운 뷰어/편집(낙관적 락 충돌 UI), 검색바·필터·정렬, 빈 상태/에러/로딩, 키보드 단축키 | `phases/11-dashboard-ui/` |
+| 11 dashboard-ui | pending | 폴더 트리, 마크다운 뷰어/편집(낙관적 락 충돌 UI), 검색바·필터·정렬, 빈 상태/에러/로딩, 키보드 단축키, `/archive` 페이지, `/keys` MCP 명령 빌더 | `phases/11-dashboard-ui/` |
 | 12 onboarding-guide | pending | 첫 로그인 4단계 투어 + 클라이언트별 연결 가이드 페이지(스크린샷 자리만 미리) | `phases/12-onboarding-guide/` |
 | 13 export-import | pending | export(zip+manifest.json) + import(Mneme/일반 마크다운) + 충돌 해결 UI | `phases/13-export-import/` |
 | 14 observability | pending | Prometheus 메트릭, 구조화 로깅, 감사 이벤트 사용자 조회 UI, 사용량 대시보드 | `phases/14-observability/` |
 | 15 client-validation | pending | Claude.ai / ChatGPT Developer mode / Codex CLI 실연결 + 격리 회귀 종합 실행 | `phases/15-client-validation/` |
+| 16 wiki-link-parser | pending | 본문 `[[wiki-link]]` 파서 + `memory_links` 동기 인덱스 + 제목 변경 시 backlink 본문 일괄 치환 + `mn_relations` 도구 구현 + 시스템 프롬프트에 `[[link]]` 삽입 가이드 추가 | `phases/16-wiki-link-parser/` |
+| 17 memory-map-ui | pending | `/map` 페이지: 그래프 라이브러리 결정(ADR), force-directed 레이아웃, 노드 호버 카드, 깨진 링크 표시, 필터, `Cmd/Ctrl+G` 단축키, 편집기 `[[` 자동완성, backlink 패널 | `phases/17-memory-map-ui/` |
 
 ## 범위 2: Wiki 확장
 
 | Phase | 상태 | 목적 | 메모 |
 |-------|------|------|------|
-| 20 wiki-links | deferred | `[[link]]` 파싱 + memory_links 자동 갱신 + 깨진 링크 감지 | MVP 검증 후 |
 | 21 folder-index | deferred | 폴더별 `index.md` LLM 자동 생성·유지 (배치 잡) | |
 | 22 lint-tools | deferred | 모순·고립·누락 감지, 대시보드 검토 패널 | |
 | 23 review-feedback | deferred | 사용자 피드백(맞아요/틀렸어요) → 분류 가중치 조정 | |
+
+> phase 20 wiki-links는 MVP phase 16으로 승격(2026-06-27, ADR-018).
 
 ## 범위 3: 운영·배포·확장
 

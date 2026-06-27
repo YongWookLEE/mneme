@@ -27,7 +27,7 @@
 2. **자동 분류·요약·임베딩** — 자연어 입력을 받아 폴더 경로 추론, 제목·요약 생성, 태그 자동 부여, 벡터 임베딩으로 저장
 3. **하이브리드 검색** — 의미(임베딩) + 키워드(전문검색) 결합, 사용자 조정 가능한 가중치
 4. **대시보드** — Google Drive 스타일 폴더 브라우저, 마크다운 미리보기·인라인 편집, 검색·필터·정렬, 키 관리, 연결 가이드, 사용량 모니터링
-5. **Wiki적 확장** — `[[wiki-link]]` 파싱, 관계 그래프, lint 도구, 폴더별 `index.md` 자동 유지 (후속)
+5. **본문 `[[wiki-link]]` + 관계 맵** — 메모리 본문 안 `[[메모리 제목]]` / `[[mem_<id>]]`를 파싱해 자동으로 양방향 backlink 인덱스 유지. `/map` 페이지에서 그래프 시각화. LLM이 `mn_write`/`mn_update` 시 관련 기존 메모리를 자연스럽게 `[[link]]`로 참조하도록 시스템 프롬프트 유도 (옵시디언적 경험). `index.md` 자동 유지·lint 도구는 후속
 6. **데이터 포터빌리티** — export(zip + manifest.json), import(같은 형식 또는 일반 마크다운 zip), 계정 삭제 시 완전 제거
 7. **사용자 가시성** — 일일 토큰 사용량, 임계치 경고, 본인 감사 로그 조회, 키별 마지막 사용 시각
 
@@ -61,13 +61,15 @@
 ## MVP 범위
 
 - Google OAuth 로그인 + `mn_<32B base62>` API 키 발급/폐기/회전
-- MCP 서버 (Streamable HTTP) + 11개 도구(`mn_schema, mn_whoami, mn_list, mn_read, mn_search, mn_write, mn_update, mn_archive, mn_restore, mn_relations, mn_surface`)
+- MCP 서버 (Streamable HTTP) + 11개 도구(`mn_schema, mn_whoami, mn_list, mn_read, mn_search, mn_write, mn_update, mn_archive, mn_restore, mn_relations, mn_surface`). `mn_write`/`mn_update`는 본문 안 `[[wiki-link]]`를 자동 파싱해 `memory_links` 인덱스를 갱신, `mn_relations`는 이 인덱스를 조회(이웃·backlink·깨진 링크 표시)
 - REST API (MCP와 동일 기능, 대시보드도 같은 API 사용)
 - 메모리 저장 시 OpenAI 임베딩 + GPT-4o-mini 자동 분류·요약·태깅
 - PostgreSQL + pgvector 하이브리드 검색 (벡터 + tsvector + 가중치 α)
-- 대시보드: 폴더 트리, 마크다운 뷰어/인라인 편집, 검색바·필터(폴더/태그/날짜)·정렬(최신/관련도/제목), 빈 상태·에러·로딩
-- 키보드 단축키: `Cmd/Ctrl+K`(검색), `Cmd/Ctrl+N`(새 메모리), `Cmd/Ctrl+S`(저장), `Cmd/Ctrl+E`(편집), `Esc`(닫기/취소), 폴더 트리 방향키 탐색, `/`(검색 포커스)
-- API 키 관리 UI: 발급/폐기/이름 수정/마지막 사용 시각/일일 사용량
+- 대시보드: 폴더 트리, 마크다운 뷰어/인라인 편집, 검색바·필터(폴더/태그/날짜)·정렬(최신/관련도/제목), 빈 상태·에러·로딩, 본문 안 `[[link]]` 클릭 시 대상 메모리 이동
+- `/map` 페이지: 본문 `[[link]]` 기반 관계 그래프 시각화 (옵시디언 graph view 등가물), 노드 클릭 시 본문 미리보기, 깨진 링크 강조
+- `/archive` 페이지: archive(`mn_archive`) 된 메모리 일괄 보기·복구(`mn_restore`), "같은 경로에 활성 메모리 존재 시 복구 불가" 안내
+- 키보드 단축키: `Cmd/Ctrl+K`(검색), `Cmd/Ctrl+N`(새 메모리), `Cmd/Ctrl+S`(저장), `Cmd/Ctrl+E`(편집), `Cmd/Ctrl+G`(맵 열기), `Esc`(닫기/취소), 폴더 트리 방향키 탐색, `/`(검색 포커스)
+- API 키 관리 UI: 발급/폐기/이름 수정/마지막 사용 시각/일일 사용량. 발급 직후 **MCP 연결 명령 자동 생성기** 노출 — 클라이언트 토글(Claude Code/Codex) + scope 토글(local/user/project) → `claude mcp add --transport http ...` 명령을 클립보드 복사 가능
 - 사용자별 데이터 격리 (모든 쿼리 user_id 강제, 자동 회귀 테스트)
 - Rate limiting (사용자별 분당/일별, write는 더 엄격)
 - OpenAI 토큰 사용량 추적 + 임계치 경고 (대시보드 배너 + 이메일)
@@ -81,8 +83,8 @@
 
 ## MVP 제외 사항
 
-- `[[wiki-link]]` 파싱, lint 도구, 관계 그래프 시각화
-- 폴더별 `index.md` LLM 자동 유지
+- lint 도구(모순·고립·누락 감지 배치 잡), 폴더별 `index.md` LLM 자동 유지
+- 백그라운드 자동 관계 추론(LLM 분석 잡). 관계는 본문 `[[link]]`로만, 명령형으로만 생성
 - 검토(review) 패널, 사용자 피드백 학습 루프
 - 폴더·메모리 공유, 다중 사용자 협업, 읽기 전용 공개 링크
 - 결제·구독·요금제
