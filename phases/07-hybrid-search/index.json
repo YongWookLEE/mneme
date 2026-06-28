@@ -1,0 +1,12 @@
+{
+  "project": "Mneme",
+  "phase": "07-hybrid-search",
+  "goal": "pgvector cosine + tsvector ts_rank + pg_trgm similarity 결합 하이브리드 검색. 가중치 α/β/γ + 폴더/태그/날짜 필터 + archived 제외. /api/search.",
+  "milestone": "M3 — 메모리 도메인 검색 완성",
+  "steps": [
+    { "step": 1, "name": "search-infra-check",    "status": "completed", "summary": "V1 인덱스(ivfflat, gin tsv, gin trgm) EXPLAIN 확인. 사용자 격리 인덱스(memories_user_folder_idx)와 함께 동작" },
+    { "step": 2, "name": "hybrid-score-service",  "status": "completed", "summary": "SearchService 단일 네이티브 SQL: α(1-cosine) + β·ts_rank + γ·similarity. SearchProperties 가중치(α=0.6,β=0.3,γ=0.1) 환경변수 노출. tag 필터는 EXISTS subquery로 격리" },
+    { "step": 3, "name": "search-rest",           "status": "completed", "summary": "GET /api/search?q=&folderExtId=&tags=&from=&to=&limit=. 본문 제외 응답(상세는 /api/memories). UTC OffsetDateTime 변환 헬퍼(JPA 네이티브가 Instant 반환). 라이브: 벡터·텍스트 1위 정렬 정상" },
+    { "step": 4, "name": "handoff-phase-08-queue","status": "completed", "summary": "HANDOFF/CHANGELOG/ROADMAP 갱신. phase 08(security-controls) 큐: rate limit + 토큰 한도 + PII 마스킹 + IsolationRegressionTest REST 확장" }
+  ]
+}

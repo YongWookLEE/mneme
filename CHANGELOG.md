@@ -47,6 +47,12 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 07 hybrid-search (code + live ✅):
+  - `SearchService` 단일 네이티브 SQL — α·(1−cosine) + β·ts_rank + γ·similarity
+  - `SearchProperties` (`mneme.search.*` 가중치 α=0.6 / β=0.3 / γ=0.1 + limit 1..100)
+  - `GET /api/search?q=&folderExtId=&tags=&from=&to=&limit=` (응답은 본문 제외)
+  - JPA 네이티브 timestamp → OffsetDateTime 변환 헬퍼
+  - 라이브 검증 2026-06-28: 의미 기반 정렬 정상(벡터 검색 질의 → pgvector 메모리 1위)
 - Phase 06 llm-adapter (code + live ✅):
   - OpenAI REST 어댑터(`OpenAiClient` + `LlmProperties` + `OpenAiException` 계층). ADR-020.
   - `EmbeddingService` text-embedding-3-small 1536d + SHA-256 키 Caffeine 캐시(5000/30min)

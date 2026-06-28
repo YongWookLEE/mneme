@@ -75,3 +75,9 @@ mneme:
     request-timeout-seconds: ${MNEME_OPENAI_TIMEOUT_SEC:30}
     embedding-cache-max-size: ${MNEME_OPENAI_EMBED_CACHE_MAX:5000}
     embedding-cache-ttl-minutes: ${MNEME_OPENAI_EMBED_CACHE_TTL_MIN:30}
+  search:
+    vector-alpha: ${MNEME_SEARCH_VECTOR_ALPHA:0.6}
+    text-beta: ${MNEME_SEARCH_TEXT_BETA:0.3}
+    trigram-gamma: ${MNEME_SEARCH_TRIGRAM_GAMMA:0.1}
+    default-limit: ${MNEME_SEARCH_DEFAULT_LIMIT:20}
+    max-limit: ${MNEME_SEARCH_MAX_LIMIT:100}
