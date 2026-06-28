@@ -8,6 +8,7 @@ import {
   updateMemory,
   type MemoryDto,
 } from "../api/memories";
+import BacklinkPanel from "../components/BacklinkPanel";
 import MarkdownView from "../components/MarkdownView";
 import Sidebar from "../components/Sidebar";
 
@@ -192,6 +193,8 @@ export default function MemoryDetailPage(): JSX.Element {
                 저장 실패: {(saveMutation.error as Error).message}
               </div>
             )}
+
+            <BacklinkPanel memoryExtId={data.extId} />
           </article>
         )}
       </main>

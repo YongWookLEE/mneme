@@ -1,0 +1,11 @@
+{
+  "project": "Mneme",
+  "phase": "17-memory-map-ui",
+  "goal": "/map 그래프 페이지 + 메모리 상세 backlink 패널. M6.5 — 위키 경험 완성.",
+  "milestone": "M6.5 — 위키 경험",
+  "steps": [
+    { "step": 1, "name": "graph-rest",        "status": "completed", "summary": "GraphController GET /api/graph (nodes + edges + broken). BacklinksController GET /api/memories/{extId}/backlinks. 라이브: 4 노드 + 깨진 링크 1건 정상." },
+    { "step": 2, "name": "map-page",          "status": "completed", "summary": "react-force-graph-2d 도입. /map 페이지 — 다크 캔버스 + 메모리 노드(크기는 byteSize 기준) + 엣지 + 깨진 링크 사이드 패널. 노드 클릭 시 상세 페이지로." },
+    { "step": 3, "name": "detail-backlinks",  "status": "completed", "summary": "BacklinkPanel 컴포넌트 + MemoryDetailPage 하단에 마운트. Shell 헤더 '맵' 탭. 라이브: backlinks API 200 + 그래프 데이터 정상." }
+  ]
+}

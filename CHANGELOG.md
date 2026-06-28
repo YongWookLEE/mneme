@@ -5,6 +5,12 @@
 ## [Unreleased]
 
 ### Added
+- Phase 17 memory-map-ui (code + live ✅, **M6.5 달성**):
+  - `GraphController` `GET /api/graph` — 활성 메모리 노드 + wiki-link 엣지 + 깨진 링크
+  - `BacklinksController` `GET /api/memories/{extId}/backlinks`
+  - 프론트 `react-force-graph-2d` + `/map` 페이지(다크 캔버스, 노드 byteSize 크기, 깨진 링크 사이드 패널, 노드 클릭 라우팅)
+  - `BacklinkPanel` 컴포넌트 → `MemoryDetailPage` 하단 마운트
+  - Shell '맵' 탭 + 라이브 2026-06-28: graph 4노드 + 깨진 링크 1건 정상 ✅
 - Phase 16 wiki-link-parser (code + live ✅):
   - `WikiLinkParser` — `[[제목]]`/`[[mem_<base32>]]` 정규식 파싱, 펜스/인라인 코드 마스킹. 4건 unit 테스트
   - `WikiLinkIndexer` — source 단위 reindex(`@Transactional`), 깨진 링크는 target_id=null
