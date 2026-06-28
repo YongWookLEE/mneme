@@ -1,0 +1,12 @@
+{
+  "project": "Mneme",
+  "phase": "13-export-import",
+  "goal": "사용자 본인의 메모리 전체 export(zip+manifest.json) + import(Mneme zip 또는 일반 마크다운 zip) + 충돌 해결 UI.",
+  "milestone": "M7 — 포터빌리티·운영 (phase 14·15에서 완성)",
+  "steps": [
+    { "step": 1, "name": "backend-export",    "status": "completed", "summary": "ExportService: 사용자 본인 폴더+태그+메모리(active+archived)를 zip 스트림으로. manifest.json + memories/<extId>.md(frontmatter: title/ext_id/folder_ext_id/summary/tags/archived/timestamps). ExportController GET /api/export. 라이브: 5건 메모리 + 매니페스트 정상." },
+    { "step": 2, "name": "backend-import",    "status": "completed", "summary": "ImportService 2단계 흐름 — preview(zip 파싱, frontmatter 또는 # 헤딩으로 제목 추론 + 폴더 경로 추론) → apply(Caffeine 30분 TTL session, skip/replace/create-new 결정). ensureFolder는 materialized path 자동 생성. ImportController POST /api/import/preview(multipart) + /api/import/apply(JSON). 라이브: 5건 preview + skip 5건 결정 적용 정상." },
+    { "step": 3, "name": "frontend-pages",    "status": "completed", "summary": "ExportImportPage `/data` — Export 섹션(zip 다운로드 버튼, blob 처리) + Import 섹션(파일 업로드 → preview 항목 리스트 + 충돌 표시 + 항목별 select). Shell 헤더 '데이터' 탭." },
+    { "step": 4, "name": "live-and-commit",   "status": "completed", "summary": "백엔드 build + 프론트 typecheck/lint/test/build 통과. 라이브: /api/export 200 zip + /api/import/preview·apply 정상. M7 절반(observability·client-validation은 phase 14·15에서)." }
+  ]
+}

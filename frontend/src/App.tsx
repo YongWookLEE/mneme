@@ -7,6 +7,7 @@ import MemoryListPage from "./pages/MemoryListPage";
 import OnboardingTour from "./components/OnboardingTour";
 import ArchivePage from "./pages/ArchivePage";
 import ConnectGuidePage from "./pages/ConnectGuidePage";
+import ExportImportPage from "./pages/ExportImportPage";
 import KeysPage from "./pages/KeysPage";
 import MemoryDetailPage from "./pages/MemoryDetailPage";
 import SearchPage from "./pages/SearchPage";
@@ -39,6 +40,7 @@ export default function App(): JSX.Element {
               <Route path="archive" element={<ArchivePage />} />
               <Route path="keys" element={<KeysPage />} />
               <Route path="connect" element={<ConnectGuidePage />} />
+              <Route path="data" element={<ExportImportPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
           </Routes>

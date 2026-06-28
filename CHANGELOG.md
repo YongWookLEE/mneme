@@ -47,6 +47,13 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 13 export-import (code + live ✅):
+  - `ExportService` — 사용자 폴더/태그/메모리(active+archived)를 zip 스트림으로 직렬화. `manifest.json` + `memories/<extId>.md`(frontmatter)
+  - `ExportController` `GET /api/export` application/zip + Content-Disposition
+  - `ImportService` 2단계 — `preview`(.md 파싱 + 충돌 표시 + Caffeine 30분 TTL session) + `apply`(항목별 skip/replace/create-new). `ensureFolder` 자동 폴더 트리 생성
+  - `ImportController` POST `/api/import/preview`(multipart) + `/api/import/apply`(JSON)
+  - 프론트 `/data` 페이지 — Export 다운로드 + Import 업로드 + 항목별 충돌 결정 UI + Shell 헤더 '데이터' 탭
+  - 라이브 2026-06-28: 5건 메모리 export zip + 5건 preview + skip 5건 apply 정상 ✅
 - Phase 12 onboarding-guide (code ✅, **M6 달성**):
   - `OnboardingTour` 첫 로그인 4단계 모달 + localStorage `mneme.onboarded` 플래그
   - `/connect` 페이지 — Claude Desktop/Codex CLI/ChatGPT Developer mode 3종 스니펫 + 복사 + 스크린샷 자리

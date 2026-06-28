@@ -32,7 +32,7 @@
 | 10 mcp-oauth-dcr | completed | RFC 7591 DCR(`/oauth/register`) + Authorization Code(PKCE S256) + refresh + OAuth access token Bearer 인증 필터. 라이브: DCR/refresh/whoami 정상. **M5 도달**. authorize 종단 라이브는 phase 15 | `phases/10-mcp-oauth-dcr/` |
 | 11 dashboard-ui | completed | 폴더 트리·메모리 리스트·상세·마크다운 편집(낙관적 락 충돌 UI)·`/search`·`/archive`·`/keys`(발급/폐기/회전 + MCP 명령 빌더). Mod+K 단축키. ApiKeyController Bearer 통합 + V3 audit_events.ip TEXT 보정 | `phases/11-dashboard-ui/` |
 | 12 onboarding-guide | completed | 첫 로그인 4단계 `OnboardingTour` + `/connect` 클라이언트 가이드 페이지(Claude/Codex/ChatGPT 스니펫 + 복사 + 스크린샷 자리). **M6 달성** | `phases/12-onboarding-guide/` |
-| 13 export-import | pending | export(zip+manifest.json) + import(Mneme/일반 마크다운) + 충돌 해결 UI | `phases/13-export-import/` |
+| 13 export-import | completed | `ExportService` zip 스트리밍(manifest.json + memories/*.md frontmatter) + `ImportService` 2단계 흐름(preview/apply Caffeine 30분 TTL + skip/replace/create-new) + 프론트 `/data` 페이지(다운로드 + 업로드 + 항목별 충돌 결정) | `phases/13-export-import/` |
 | 14 observability | pending | Prometheus 메트릭, 구조화 로깅, 감사 이벤트 사용자 조회 UI, 사용량 대시보드 | `phases/14-observability/` |
 | 15 client-validation | pending | Claude.ai / ChatGPT Developer mode / Codex CLI 실연결 + 격리 회귀 종합 실행 | `phases/15-client-validation/` |
 | 16 wiki-link-parser | pending | 본문 `[[wiki-link]]` 파서 + `memory_links` 동기 인덱스 + 제목 변경 시 backlink 본문 일괄 치환 + `mn_relations` 도구 구현 + 시스템 프롬프트에 `[[link]]` 삽입 가이드 추가 | `phases/16-wiki-link-parser/` |
