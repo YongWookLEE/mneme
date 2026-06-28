@@ -185,7 +185,7 @@ function McpConnectBuilder({ bearer }: BuilderProps): JSX.Element {
     null,
     2,
   );
-  const codexCli = `codex mcp add mneme --transport sse --url ${base}/sse --header "Authorization: Bearer ${bearer}"`;
+  const codexCli = `codex mcp add mneme --url ${base}/sse --header "Authorization: Bearer ${bearer}"`;
   return (
     <div className="space-y-2 text-xs text-ink-200">
       <div className="font-medium text-ink-100">MCP 연결 명령</div>

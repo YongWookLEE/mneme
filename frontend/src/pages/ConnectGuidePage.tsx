@@ -24,7 +24,7 @@ export default function ConnectGuidePage(): JSX.Element {
     null,
     2,
   );
-  const codex = `codex mcp add mneme \\\n  --transport sse \\\n  --url ${baseGuess}/sse \\\n  --header "Authorization: Bearer <YOUR_BEARER>"`;
+  const codex = `codex mcp add mneme \\\n  --url ${baseGuess}/sse \\\n  --header "Authorization: Bearer <YOUR_BEARER>"`;
   const chatgpt = `# ChatGPT Developer mode\n# Settings → Connectors → Add custom MCP\nName: Mneme\nTransport: SSE\nURL: ${baseGuess}/sse\nAuthorization: Bearer <YOUR_BEARER>`;
 
   return (
