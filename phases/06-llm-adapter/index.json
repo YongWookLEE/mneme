@@ -1,0 +1,13 @@
+{
+  "project": "Mneme",
+  "phase": "06-llm-adapter",
+  "goal": "OpenAI REST 어댑터(임베딩 1536d + gpt-4o-mini 요약/분류/태그 제안) + 프롬프트 인젝션 방어 + Caffeine 임베딩 캐시 + 사용량 일일 집계. 호출은 트랜잭션 밖에서, 저장은 트랜잭션 안에서. ADR-020.",
+  "milestone": "M3 — 메모리 도메인 (임베딩 통합, 검색은 phase 07)",
+  "steps": [
+    { "step": 1, "name": "deps-and-config",         "status": "completed", "summary": "Caffeine 추가, LlmProperties, OpenAiClient(RestClient 래퍼), OpenAiException 계층(Unauthorized/RateLimited/BadRequest/ServerError). @ConfigurationPropertiesScan 등록" },
+    { "step": 2, "name": "embedding-service-cache", "status": "completed", "summary": "EmbeddingService: text-embedding-3-small 1536d + SHA-256 텍스트 키 Caffeine 캐시(5000/30min). UsageRecorder 인터페이스 + NoOp 기본빈. 캐시 히트/미스 단위 테스트" },
+    { "step": 3, "name": "prompt-guard-chat",       "status": "completed", "summary": "PromptGuard(8KB fence + 마커 이스케이프) + ChatService.summarize/classifyFolder/suggestTags. 시스템 프롬프트 리소스 분리. 실패는 swallow(메모리 저장 막지 않음)" },
+    { "step": 4, "name": "memory-integration",      "status": "completed", "summary": "MemoryWriteFacade(외부 호출 트랜잭션 밖→ MemoryService 트랜잭션→ MemoryEmbeddingDao 별도 트랜잭션). PgUsageRecorder REQUIRES_NEW upsert. SecurityConfig: Bearer 헤더 보유 시 CSRF 면제 보정" },
+    { "step": 5, "name": "handoff-phase-07-queue",  "status": "completed", "summary": "라이브 검증 통과: 메모리 작성 → embedding 1536d 정상 저장 + 요약 자동 생성 + usage_daily(73 embed / 144in+22out chat) 집계 정상. HANDOFF/CHANGELOG/ROADMAP 갱신 + phase 07 큐" }
+  ]
+}

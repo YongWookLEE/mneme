@@ -3,6 +3,7 @@ package com.mneme.api
 import com.mneme.id.PrefixedId
 import com.mneme.memory.Memory
 import com.mneme.memory.MemoryService
+import com.mneme.memory.MemoryWriteFacade
 import com.mneme.security.AuthenticatedUserResolver
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,6 +26,7 @@ import java.time.OffsetDateTime
 @RequestMapping("/api/memories")
 class MemoryController(
     private val memoryService: MemoryService,
+    private val memoryWriteFacade: MemoryWriteFacade,
     private val userResolver: AuthenticatedUserResolver,
 ) {
     @PostMapping
@@ -35,7 +37,7 @@ class MemoryController(
         val userId = userResolver.currentUserId()
         val folderId = PrefixedId.parse(body.folderExtId, PrefixedId.Prefix.FOLDER).uuid
         return toResponse(
-            memoryService.create(
+            memoryWriteFacade.create(
                 userId = userId,
                 folderId = folderId,
                 title = body.title,
@@ -64,7 +66,7 @@ class MemoryController(
         val memoryId = PrefixedId.parse(extId, PrefixedId.Prefix.MEMORY).uuid
         val folderId = body.folderExtId?.let { PrefixedId.parse(it, PrefixedId.Prefix.FOLDER).uuid }
         return toResponse(
-            memoryService.update(
+            memoryWriteFacade.update(
                 userId = userId,
                 memoryId = memoryId,
                 expectedVersion = body.version,

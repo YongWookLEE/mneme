@@ -1,6 +1,8 @@
 package com.mneme
 
+import com.mneme.llm.LlmProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 
 /**
@@ -10,6 +12,7 @@ import org.springframework.boot.runApplication
  * Phase 01에서는 도메인 코드 없이 Actuator 헬스 엔드포인트만 노출한다.
  */
 @SpringBootApplication
+@ConfigurationPropertiesScan(basePackageClasses = [LlmProperties::class])
 class MnemeApplication
 
 /**

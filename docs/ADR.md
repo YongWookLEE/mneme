@@ -280,3 +280,20 @@
 - 성좌/Constellation: Heirmos 그대로, 차별화 약함, 톤 불일치
 - Graph/그래프: 너무 기술적, 비개발 사용자에게 차가움
 - Network/기억망: 시각적이지만 도구성 약함
+
+## ADR-020: LLM/임베딩 호출은 OpenAI REST API 직접 호출, Spring AI는 MCP 서버에만 사용
+
+**상태**: accepted (2026-06-28)
+
+**결정**: phase 06 임베딩/요약/분류 호출은 Spring `RestClient`로 OpenAI HTTP API(`/v1/embeddings`, `/v1/chat/completions`)를 직접 호출한다. Spring AI 의존성은 phase 09(MCP 서버)의 `spring-ai-starter-mcp-server`에만 도입한다.
+
+**이유**:
+- MVP에서 임베딩·채팅은 2개 엔드포인트만 쓴다. 추상화 이득보다 의존성 트리·버전 호환 비용이 크다.
+- Spring AI 1.0.0 GA는 모델·옵션 API가 빠르게 진화 중. 향후 업그레이드 충격을 MCP 영역에만 가둔다.
+- 프롬프트 인젝션 방어·캐시·로그 마스킹·토큰 사용량 집계를 RestClient 래퍼 한 곳에 모으는 편이 추적하기 쉽다.
+
+**트레이드오프**: OpenAI 외 모델(Anthropic/local)을 추가하려면 어댑터 직접 작성. 단 ADR-004가 OpenAI 단일을 못박았으므로 실질 비용 0.
+
+**대안**:
+- `spring-ai-starter-model-openai`: 자동 설정 편하지만 의존성·옵션 매핑 학습 비용.
+- LangChain4j: 추상화 풍부하나 ADR-001 Spring 생태계 단일화 원칙과 어긋남.

@@ -47,6 +47,15 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 06 llm-adapter (code + live ✅):
+  - OpenAI REST 어댑터(`OpenAiClient` + `LlmProperties` + `OpenAiException` 계층). ADR-020.
+  - `EmbeddingService` text-embedding-3-small 1536d + SHA-256 키 Caffeine 캐시(5000/30min)
+  - `PromptGuard.fence` 8KB 절단 + 마커 이스케이프 펜스(프롬프트 인젝션 1차 방어)
+  - `ChatService` gpt-4o-mini: `summarize`/`classifyFolder`/`suggestTags` + 시스템 프롬프트 리소스 분리
+  - `MemoryWriteFacade`: 외부 호출은 트랜잭션 밖 → MemoryService(tx1) → `MemoryEmbeddingDao` 네이티브 UPDATE(tx2)
+  - `PgUsageRecorder` REQUIRES_NEW: `usage_daily` ON CONFLICT 일일 토큰 집계
+  - SecurityConfig: Authorization Bearer 헤더 보유 요청은 CSRF 면제(phase 04 보안 보정)
+  - 라이브 검증 2026-06-28: embedding 1536d 정상 저장 + 요약 자동 생성 + usage_daily 집계 정상
 
 ### Changed
 - 프로젝트명을 `unified-memory` → `Mneme`로 변경

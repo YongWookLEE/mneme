@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter
+import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsConfigurationSource
 
 /**
@@ -51,8 +52,14 @@ class SecurityConfig {
         http.httpBasic { it.disable() }
         http.formLogin { it.disable() }
         http.cors(Customizer.withDefaults())
+        // Bearer 토큰 인증(API 키·MCP OAuth)은 쿠키 ambient 인증이 아니므로 CSRF 불필요.
+        val bearerMatcher =
+            RequestMatcher { req ->
+                req.getHeader("Authorization")?.startsWith("Bearer ") == true
+            }
         http.csrf { csrf ->
             csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            csrf.ignoringRequestMatchers(bearerMatcher)
         }
         http.headers { headers ->
             headers.contentSecurityPolicy {
