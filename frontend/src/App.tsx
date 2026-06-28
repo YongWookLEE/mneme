@@ -4,7 +4,9 @@ import type { JSX } from "react";
 import AuthGate from "./components/AuthGate";
 import Shell from "./components/Shell";
 import MemoryListPage from "./pages/MemoryListPage";
+import OnboardingTour from "./components/OnboardingTour";
 import ArchivePage from "./pages/ArchivePage";
+import ConnectGuidePage from "./pages/ConnectGuidePage";
 import KeysPage from "./pages/KeysPage";
 import MemoryDetailPage from "./pages/MemoryDetailPage";
 import SearchPage from "./pages/SearchPage";
@@ -26,6 +28,7 @@ export default function App(): JSX.Element {
   return (
     <AuthGate>
       <QueryClientProvider client={queryClient}>
+        <OnboardingTour />
         <BrowserRouter>
           <Routes>
             <Route element={<Shell />}>
@@ -35,6 +38,7 @@ export default function App(): JSX.Element {
               <Route path="search" element={<SearchPage />} />
               <Route path="archive" element={<ArchivePage />} />
               <Route path="keys" element={<KeysPage />} />
+              <Route path="connect" element={<ConnectGuidePage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
           </Routes>

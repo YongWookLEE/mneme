@@ -31,7 +31,7 @@
 | 09 mcp-server | completed | Spring AI MCP server starter(WebMVC) + 11개 `mn_*` `@Tool` + Reactor 컨텍스트 자동 전파(Micrometer + Hooks)로 SecurityContextHolder가 boundedElastic 워커까지 전파. 라이브: tools/list 11개 + mn_whoami/mn_list/mn_search 정상 | `phases/09-mcp-server/` |
 | 10 mcp-oauth-dcr | completed | RFC 7591 DCR(`/oauth/register`) + Authorization Code(PKCE S256) + refresh + OAuth access token Bearer 인증 필터. 라이브: DCR/refresh/whoami 정상. **M5 도달**. authorize 종단 라이브는 phase 15 | `phases/10-mcp-oauth-dcr/` |
 | 11 dashboard-ui | completed | 폴더 트리·메모리 리스트·상세·마크다운 편집(낙관적 락 충돌 UI)·`/search`·`/archive`·`/keys`(발급/폐기/회전 + MCP 명령 빌더). Mod+K 단축키. ApiKeyController Bearer 통합 + V3 audit_events.ip TEXT 보정 | `phases/11-dashboard-ui/` |
-| 12 onboarding-guide | pending | 첫 로그인 4단계 투어 + 클라이언트별 연결 가이드 페이지(스크린샷 자리만 미리) | `phases/12-onboarding-guide/` |
+| 12 onboarding-guide | completed | 첫 로그인 4단계 `OnboardingTour` + `/connect` 클라이언트 가이드 페이지(Claude/Codex/ChatGPT 스니펫 + 복사 + 스크린샷 자리). **M6 달성** | `phases/12-onboarding-guide/` |
 | 13 export-import | pending | export(zip+manifest.json) + import(Mneme/일반 마크다운) + 충돌 해결 UI | `phases/13-export-import/` |
 | 14 observability | pending | Prometheus 메트릭, 구조화 로깅, 감사 이벤트 사용자 조회 UI, 사용량 대시보드 | `phases/14-observability/` |
 | 15 client-validation | pending | Claude.ai / ChatGPT Developer mode / Codex CLI 실연결 + 격리 회귀 종합 실행 | `phases/15-client-validation/` |

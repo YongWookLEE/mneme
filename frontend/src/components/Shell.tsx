@@ -44,6 +44,14 @@ export default function Shell(): JSX.Element {
           >
             키
           </NavLink>
+          <NavLink
+            to="/connect"
+            className={({ isActive }) =>
+              `rounded px-2 py-1 hover:text-ink-100 ${isActive ? "text-ink-100" : ""}`
+            }
+          >
+            연결
+          </NavLink>
           <button
             type="button"
             onClick={() => {

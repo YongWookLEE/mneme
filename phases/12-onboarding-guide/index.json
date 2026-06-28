@@ -1,0 +1,11 @@
+{
+  "project": "Mneme",
+  "phase": "12-onboarding-guide",
+  "goal": "첫 로그인 4단계 투어 + 클라이언트별 연결 가이드 페이지. M6 — 대시보드 사용 가능.",
+  "milestone": "M6 — 대시보드 사용 가능",
+  "steps": [
+    { "step": 1, "name": "tour-modal",       "status": "completed", "summary": "OnboardingTour 컴포넌트(localStorage `mneme.onboarded` 플래그). 4단계: 환영 → 키 발급 → MCP 연결 → 메모리 작성. 건너뛰기 + 이전/다음." },
+    { "step": 2, "name": "connect-guide",    "status": "completed", "summary": "/connect 페이지 — Claude Desktop / Codex CLI / ChatGPT Developer mode 3종 스니펫 + 복사 버튼. 스크린샷 자리 표시는 phase 15에서 채움. Shell 헤더에 '연결' 탭 추가." },
+    { "step": 3, "name": "wrap-and-commit",  "status": "completed", "summary": "typecheck/lint/test/build 통과. HANDOFF/CHANGELOG/ROADMAP 갱신 + 커밋. M6(대시보드 사용 가능) 도달." }
+  ]
+}

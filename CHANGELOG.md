@@ -47,6 +47,10 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 12 onboarding-guide (code ✅, **M6 달성**):
+  - `OnboardingTour` 첫 로그인 4단계 모달 + localStorage `mneme.onboarded` 플래그
+  - `/connect` 페이지 — Claude Desktop/Codex CLI/ChatGPT Developer mode 3종 스니펫 + 복사 + 스크린샷 자리
+  - Shell 헤더 "연결" 탭
 - Phase 11 dashboard-ui (code + live ✅):
   - step 2 editor: `react-markdown` + `remark-gfm` + `@tailwindcss/typography` + `MarkdownView`. `MemoryDetailPage` 뷰/편집 + PATCH 낙관적 락 + 409 ConflictPanel(서버/내 본문 좌우 + keep mine/take server/manual merge) + 보관 액션
   - step 3 search/archive/keys: `SearchBar`+`SearchPage`(/search?q=) + `ArchivePage` + `KeysPage` 발급/폐기/회전 + Claude Desktop/Codex MCP 연결 명령 빌더. `ApiKeyController` Bearer 통일. V3 마이그레이션으로 `audit_events.ip` INET→TEXT
