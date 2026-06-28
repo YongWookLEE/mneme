@@ -47,6 +47,13 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 11 step 1 dashboard-ui shell:
+  - 의존성 `react-router-dom`@6 + `@tanstack/react-query`@5
+  - Tailwind 모노크롬 토큰(`ink-50…ink-900`, 보라/푸른기 금지)
+  - `lib/auth.ts` + `api/client.ts` + `api/{folders,memories}.ts`
+  - `AuthGate`, `Shell`, `Sidebar`, `MemoryListPage`, `MemoryDetailPage`, `StubPage`
+  - React Router 라우트 5종 + smoke 테스트 갱신 + jsdom localStorage stub
+  - npm typecheck/lint/test/build + Vite dev 5173 정상. 백엔드 REST Bearer 통과 ✅
 - Phase 10 mcp-oauth-dcr (code + live ✅, **M5 달성**):
   - Flyway V2: `oauth_clients.user_id` NULL 허용(DCR 익명 등록)
   - `OAuthClient`/`OAuthToken` 엔티티 + 리포지토리 + `OAuthProperties`(access 30분/refresh 30일/code 10분)

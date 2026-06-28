@@ -1,0 +1,12 @@
+{
+  "project": "Mneme",
+  "phase": "11-dashboard-ui",
+  "goal": "Mneme 대시보드 — 폴더 트리, 마크다운 뷰어/편집(낙관적 락), 검색, /archive, /keys MCP 명령 빌더, 단축키. 중립 모노크롬 그레이.",
+  "milestone": "M6 — 대시보드 사용 가능 (phase 12에서 완성)",
+  "steps": [
+    { "step": 1, "name": "shell-layout-api",      "status": "completed", "summary": "React Router 6 + TanStack Query 5 도입. Tailwind 모노크롬 토큰(ink-50~900). AuthGate(localStorage `mneme.bearer` 입력 모달). API client(fetch wrapper + 401 자동 키 삭제). Shell/Sidebar/MemoryListPage/MemoryDetailPage/StubPage 라우트. 라이브: 백엔드 REST(/api/folders, /api/memories) Bearer 인증 정상 + npm typecheck/lint/test/build 통과 + Vite dev 5173 200" },
+    { "step": 2, "name": "memory-editor-conflict", "status": "pending", "summary": "" },
+    { "step": 3, "name": "search-archive-keys",    "status": "pending", "summary": "" },
+    { "step": 4, "name": "shortcuts-states-live",  "status": "pending", "summary": "" }
+  ]
+}

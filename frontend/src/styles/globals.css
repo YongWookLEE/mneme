@@ -4,10 +4,22 @@
 
 :root {
   color-scheme: dark;
+  --ink-900: #0a0a0b;
+  --ink-800: #111113;
+  --ink-700: #1a1a1d;
+  --ink-600: #26262a;
+  --ink-500: #3a3a40;
+  --ink-100: #d4d4d7;
 }
 
 html,
 body,
 #root {
   height: 100%;
+}
+
+body {
+  background: var(--ink-900);
+  color: var(--ink-100);
+  font-feature-settings: "ss01", "ss02";
 }
