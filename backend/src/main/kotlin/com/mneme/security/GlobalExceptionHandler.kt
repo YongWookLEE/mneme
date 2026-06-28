@@ -6,6 +6,8 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.AuthenticationException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.servlet.resource.NoResourceFoundException
 import java.net.URI
 
 /**
@@ -35,6 +37,28 @@ class GlobalExceptionHandler {
     fun handleAuthz(ex: AccessDeniedException): ProblemDetail {
         log.debug("403 forbidden", ex)
         return problem(ApiError.FORBIDDEN)
+    }
+
+    @ExceptionHandler(NoResourceFoundException::class)
+    fun handleNotFound(ex: NoResourceFoundException): ProblemDetail {
+        log.debug("404 not found: {}", ex.resourcePath)
+        return problem(ApiError.NOT_FOUND)
+    }
+
+    @ExceptionHandler(ResponseStatusException::class)
+    fun handleResponseStatus(ex: ResponseStatusException): ProblemDetail {
+        log.debug("{} response-status", ex.statusCode, ex)
+        val err =
+            when (ex.statusCode.value()) {
+                400 -> ApiError.BAD_REQUEST
+                401 -> ApiError.UNAUTHORIZED
+                403 -> ApiError.FORBIDDEN
+                404 -> ApiError.NOT_FOUND
+                409 -> ApiError.CONFLICT
+                429 -> ApiError.RATE_LIMIT
+                else -> ApiError.INTERNAL
+            }
+        return problem(err)
     }
 
     @ExceptionHandler(Exception::class)

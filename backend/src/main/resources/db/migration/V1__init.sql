@@ -96,7 +96,8 @@ CREATE TABLE memories (
     model_version  TEXT NOT NULL DEFAULT 'text-embedding-3-small@1',
     archived_at    TIMESTAMPTZ,
     created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+    updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+    version        BIGINT NOT NULL DEFAULT 0
 );
 CREATE INDEX memories_user_archived_idx ON memories(user_id, archived_at);
 CREATE INDEX memories_user_folder_idx ON memories(user_id, folder_id);
