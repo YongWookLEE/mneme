@@ -60,6 +60,22 @@ export default function Shell(): JSX.Element {
           >
             데이터
           </NavLink>
+          <NavLink
+            to="/usage"
+            className={({ isActive }) =>
+              `rounded px-2 py-1 hover:text-ink-100 ${isActive ? "text-ink-100" : ""}`
+            }
+          >
+            사용량
+          </NavLink>
+          <NavLink
+            to="/audit"
+            className={({ isActive }) =>
+              `rounded px-2 py-1 hover:text-ink-100 ${isActive ? "text-ink-100" : ""}`
+            }
+          >
+            감사
+          </NavLink>
           <button
             type="button"
             onClick={() => {

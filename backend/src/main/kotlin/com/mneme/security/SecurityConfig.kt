@@ -45,6 +45,7 @@ class SecurityConfig {
                 .requestMatchers(
                     "/actuator/health",
                     "/actuator/health/**",
+                    "/actuator/prometheus",
                     "/oauth/register",
                     "/oauth/token",
                     "/oauth2/**",

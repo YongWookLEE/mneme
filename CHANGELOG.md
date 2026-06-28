@@ -47,6 +47,12 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 14 observability (code + live ✅):
+  - `micrometer-registry-prometheus` 런타임 + `management.endpoints.web.exposure.include=health,prometheus` + `SecurityConfig` `/actuator/prometheus` 익명 허용
+  - `AuditController` `GET /api/audit` — 본인 이벤트(user_id/ip/user_agent 응답 노출 금지) createdAt desc
+  - `UsageDailyRepository` 네이티브 SELECT + `UsageController` `GET /api/usage?from=&to=`(기본 최근 30일)
+  - 프론트 `/audit`(이벤트 리스트) + `/usage`(요약 카드 + 일별 표) + Shell 탭 추가
+  - 라이브 2026-06-28: prometheus 200, audit 2건, usage 1일자 정상 ✅
 - Phase 13 export-import (code + live ✅):
   - `ExportService` — 사용자 폴더/태그/메모리(active+archived)를 zip 스트림으로 직렬화. `manifest.json` + `memories/<extId>.md`(frontmatter)
   - `ExportController` `GET /api/export` application/zip + Content-Disposition

@@ -1,0 +1,12 @@
+{
+  "project": "Mneme",
+  "phase": "14-observability",
+  "goal": "Prometheus 메트릭 노출 + 본인 감사 이벤트 조회 + 일별 사용량 대시보드.",
+  "milestone": "M7 — 포터빌리티·운영",
+  "steps": [
+    { "step": 1, "name": "prometheus-metrics",  "status": "completed", "summary": "micrometer-registry-prometheus runtime 의존성 + management.endpoints.web.exposure.include=health,prometheus + SecurityConfig에 /actuator/prometheus 익명 허용. 라이브: application_ready_time_seconds 등 정상 노출." },
+    { "step": 2, "name": "audit-rest",          "status": "completed", "summary": "AuditController GET /api/audit — 본인 user_id 이벤트만 createdAt desc. user_id/ip/user_agent는 응답에서 제외(노출 금지). 라이브: key.created/revoked 2건 정상." },
+    { "step": 3, "name": "usage-rest",          "status": "completed", "summary": "UsageDailyRepository 네이티브 SELECT + UsageController GET /api/usage?from=&to= (기본 최근 30일). UsageDailyRow(date+embed/llmIn/llmOut/requestCount). 라이브: 2026-06-28 행 정상." },
+    { "step": 4, "name": "frontend-pages",      "status": "completed", "summary": "AuditPage /audit + UsagePage /usage(요약 카드 + 일별 표). Shell 헤더 '사용량'/'감사' 탭. typecheck/lint/test/build 통과. 라이브 endpoint 확인." }
+  ]
+}
