@@ -98,3 +98,7 @@ mneme:
   token-quota:
     embed-per-day: ${MNEME_TOKEN_LIMIT_EMBED_PER_DAY:100000}
     llm-per-day: ${MNEME_TOKEN_LIMIT_LLM_PER_DAY:50000}
+  oauth:
+    access-ttl-minutes: ${MNEME_OAUTH_ACCESS_TOKEN_TTL_MIN:30}
+    refresh-ttl-days: ${MNEME_OAUTH_REFRESH_TOKEN_TTL_DAY:30}
+    code-ttl-seconds: ${MNEME_OAUTH_CODE_TTL_SEC:600}

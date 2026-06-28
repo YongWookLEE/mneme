@@ -1,6 +1,7 @@
 package com.mneme
 
 import com.mneme.llm.LlmProperties
+import com.mneme.oauth.OAuthProperties
 import com.mneme.search.SearchProperties
 import com.mneme.security.RateLimitProperties
 import com.mneme.security.TokenQuotaProperties
@@ -21,6 +22,7 @@ import org.springframework.boot.runApplication
         SearchProperties::class,
         RateLimitProperties::class,
         TokenQuotaProperties::class,
+        OAuthProperties::class,
     ],
 )
 class MnemeApplication

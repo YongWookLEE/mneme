@@ -3,6 +3,8 @@ package com.mneme.security
 import com.mneme.auth.ApiKeyGenerator
 import com.mneme.auth.ApiKeyRepository
 import com.mneme.auth.OAuth2LoginSuccessHandler
+import com.mneme.oauth.OAuthAccessTokenAuthenticationFilter
+import com.mneme.oauth.OAuthService
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -36,13 +38,16 @@ class SecurityConfig {
         apiKeyRepository: ApiKeyRepository,
         apiKeyGenerator: ApiKeyGenerator,
         rateLimitFilter: RateLimitFilter,
+        oauthService: OAuthService,
     ): SecurityFilterChain {
         http.authorizeHttpRequests { auth ->
             auth
                 .requestMatchers(
                     "/actuator/health",
                     "/actuator/health/**",
-                    "/oauth/**",
+                    "/oauth/register",
+                    "/oauth/token",
+                    "/oauth2/**",
                     "/login",
                     "/login/**",
                     "/error",
@@ -61,6 +66,8 @@ class SecurityConfig {
         http.csrf { csrf ->
             csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             csrf.ignoringRequestMatchers(bearerMatcher)
+            // DCR(/oauth/register) + Token(/oauth/token)은 공개 RFC 6749/7591 엔드포인트. CSRF 면제.
+            csrf.ignoringRequestMatchers("/oauth/register", "/oauth/token")
         }
         http.headers { headers ->
             headers.contentSecurityPolicy {
@@ -84,8 +91,13 @@ class SecurityConfig {
             ApiKeyAuthenticationFilter(apiKeyRepository, apiKeyGenerator),
             UsernamePasswordAuthenticationFilter::class.java,
         )
+        // OAuth access token 인증 필터: ApiKey 필터 뒤(즉 mn_ prefix가 아닐 때만 동작).
+        http.addFilterAfter(
+            OAuthAccessTokenAuthenticationFilter(oauthService),
+            ApiKeyAuthenticationFilter::class.java,
+        )
         // Rate limit은 인증 직후. RateLimitFilter는 별도 빈으로 자동 주입되지만 명시적 등록으로 순서 고정.
-        http.addFilterAfter(rateLimitFilter, ApiKeyAuthenticationFilter::class.java)
+        http.addFilterAfter(rateLimitFilter, OAuthAccessTokenAuthenticationFilter::class.java)
 
         // OAuth2 client registration이 환경 변수로 활성화돼 있을 때만 oauth2Login 체인 등록
         val repo = clientRegistrationRepository.ifAvailable

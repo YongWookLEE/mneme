@@ -1,0 +1,12 @@
+{
+  "project": "Mneme",
+  "phase": "10-mcp-oauth-dcr",
+  "goal": "MCP 클라이언트(Claude.ai/ChatGPT)가 사전 등록 없이 연결하도록 RFC 7591 동적 클라이언트 등록(DCR) + Authorization Code 흐름 + access/refresh token. M5 완성.",
+  "milestone": "M5 — MCP 라이브",
+  "steps": [
+    { "step": 1, "name": "scaffolding-and-entities", "status": "completed", "summary": "V2 마이그레이션(oauth_clients.user_id NULL 허용). OAuthClient/OAuthToken 엔티티 + 리포지토리. OAuthProperties(access 30분/refresh 30일/code 10분). OAuthAccessTokenAuthenticationFilter — mn_ prefix가 아닌 Bearer를 sha256으로 oauth_tokens 조회, SecurityContext에 ApiKeyAuthenticationToken 주입(principal=userId)" },
+    { "step": 2, "name": "dcr-register",             "status": "completed", "summary": "POST /oauth/register — RFC 7591. https 또는 localhost redirect_uri만 허용. client_id=oac_<base64url 24자>, client_secret은 32B random base64url, sha256만 저장. 응답에 1회 노출. 라이브: 정상 등록 ✅" },
+    { "step": 3, "name": "authorize-token",          "status": "completed", "summary": "GET /oauth/authorize: 세션 인증 → code(Caffeine 10분 TTL) 발급, redirect_uri로 302 리다이렉트. POST /oauth/token: authorization_code/refresh_token grant + PKCE S256 검증 + client_secret 검증. SecurityConfig: /oauth/register, /oauth/token CSRF 면제 + filter chain에 OAuthAccessTokenAuthenticationFilter 등록(ApiKey 필터 뒤). 라이브: refresh → 새 access/refresh → MCP /sse + mn_whoami 정상 ✅" },
+    { "step": 4, "name": "live-and-handoff",         "status": "completed", "summary": "OAuthServiceTest 6건 통과(DCR/PKCE/refresh/access auth/잘못된 verifier/다른 client 거부). 라이브 2026-06-28: DCR + 시드 토큰 + refresh_token grant + 새 access로 MCP whoami 정상. M5 마일스톤 도달(authorize 세션 인증 종단 라이브는 phase 15 client-validation에서 Claude.ai로)" }
+  ]
+}

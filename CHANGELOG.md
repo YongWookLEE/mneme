@@ -47,6 +47,15 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 10 mcp-oauth-dcr (code + live ✅, **M5 달성**):
+  - Flyway V2: `oauth_clients.user_id` NULL 허용(DCR 익명 등록)
+  - `OAuthClient`/`OAuthToken` 엔티티 + 리포지토리 + `OAuthProperties`(access 30분/refresh 30일/code 10분)
+  - `OAuthService` — `registerClient`(DCR) / `issueCode`(Caffeine 10분 TTL) / `exchangeCode`(PKCE S256) / `refresh`(회전) / `authenticateAccessToken`. 시크릿·토큰 모두 sha256만 저장
+  - `OAuthController` `/oauth/{register,authorize,token}` — RFC 7591/6749 호환
+  - `OAuthAccessTokenAuthenticationFilter` — `Bearer` non-`mn_` Bearer를 oauth_tokens 조회 후 SecurityContext 주입
+  - SecurityConfig: `/oauth/register`, `/oauth/token` CSRF 면제 + filter chain 갱신
+  - `OAuthServiceTest` 6건(DCR/PKCE/refresh/access auth/잘못된 verifier/다른 client 거부)
+  - 라이브 2026-06-28: DCR(`oac_pk...`) + 시드 토큰 + `refresh_token` grant → 새 access/refresh + 새 access로 `/sse` + `mn_whoami`(`sdsd1008@gmail.com`) 정상 ✅
 - Phase 09 mcp-server (code + live ✅, M5 절반):
   - `spring-ai-bom:1.0.0` + `spring-ai-starter-mcp-server-webmvc` 의존성. application.yml `spring.ai.mcp.server.*`
   - `MnemeTools`: 11개 `mn_*` 도구(`mn_schema/mn_whoami/mn_list/mn_read/mn_search/mn_write/mn_update/mn_archive/mn_restore/mn_relations/mn_surface`)
@@ -93,7 +102,7 @@
 - phase 08 ✅ → 0.4.0 후보 도달
 
 #### M5 — MCP 라이브
-- phase 09 ✅ → phase 10(OAuth DCR) 완료 시 0.5.0 후보
+- phase 09 ✅ + phase 10 ✅ → 0.5.0 후보 도달
 
 #### M7 — 포터빌리티·운영
 - phase 13-15 완료 시 1.0.0-rc 후보

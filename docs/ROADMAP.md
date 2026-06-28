@@ -29,7 +29,7 @@
 | 07 hybrid-search | completed | pgvector + tsvector + pg_trgm 결합 검색 + α/β/γ 가중치 + 필터(폴더/태그/날짜)·정렬. /api/search REST | `phases/07-hybrid-search/` |
 | 08 security-controls | completed | rate limit(Caffeine 분/일/쓰기) + 일일 LLM/embed 토큰 한도 가드 + PII 로그 마스킹 + IsolationRegressionTest 확장. M4 도달 | `phases/08-security-controls/` |
 | 09 mcp-server | completed | Spring AI MCP server starter(WebMVC) + 11개 `mn_*` `@Tool` + Reactor 컨텍스트 자동 전파(Micrometer + Hooks)로 SecurityContextHolder가 boundedElastic 워커까지 전파. 라이브: tools/list 11개 + mn_whoami/mn_list/mn_search 정상 | `phases/09-mcp-server/` |
-| 10 mcp-oauth-dcr | pending | DCR 엔드포인트(/oauth/register) + Authorization Code 흐름 + access/refresh token | `phases/10-mcp-oauth-dcr/` |
+| 10 mcp-oauth-dcr | completed | RFC 7591 DCR(`/oauth/register`) + Authorization Code(PKCE S256) + refresh + OAuth access token Bearer 인증 필터. 라이브: DCR/refresh/whoami 정상. **M5 도달**. authorize 종단 라이브는 phase 15 | `phases/10-mcp-oauth-dcr/` |
 | 11 dashboard-ui | pending | 폴더 트리, 마크다운 뷰어/편집(낙관적 락 충돌 UI), 검색바·필터·정렬, 빈 상태/에러/로딩, 키보드 단축키, `/archive` 페이지, `/keys` MCP 명령 빌더 | `phases/11-dashboard-ui/` |
 | 12 onboarding-guide | pending | 첫 로그인 4단계 투어 + 클라이언트별 연결 가이드 페이지(스크린샷 자리만 미리) | `phases/12-onboarding-guide/` |
 | 13 export-import | pending | export(zip+manifest.json) + import(Mneme/일반 마크다운) + 충돌 해결 UI | `phases/13-export-import/` |
