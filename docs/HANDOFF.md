@@ -6,8 +6,12 @@
 
 ## 마지막 업데이트
 
-- 시각: 2026-06-28 (phase 17 /map 그래프 + backlink 패널 완료 — **M6.5 달성**)
-- 직전 작업(phase 17 memory-map-ui):
+- 시각: 2026-06-28 (phase 15 첫 클라이언트 — Codex CLI 종단 검증 완료)
+- 직전 작업(phase 15 client-validation step 1 codex-cli):
+  - 사용자 직접 Codex CLI에서 `codex mcp add mneme --url http://localhost:8080/sse --bearer-token-env-var MNEME_API_KEY`로 등록 후 도구 호출 정상.
+  - Heirmos 가이드(dashboard.heirmos.com/guide) 참고로 `/connect` 페이지와 `/keys` 빌더 위젯의 Codex/Claude CLI 스니펫을 수정(`--bearer-token-env-var` 환경변수 패턴, OAuth 방식 병기).
+  - **M5 종단 라이브 검증 완료** — Spring AI MCP server + Reactor 컨텍스트 전파 + OAuth Bearer 인증이 실제 클라이언트 한 종에서 통과. Claude Desktop / ChatGPT는 사용자가 추가 검증 예정.
+- 이전 작업(phase 17 memory-map-ui):
   - `GraphController` `GET /api/graph` — 활성 메모리 노드 + wiki-link 엣지 + 깨진 링크 배열. `BacklinksController` `GET /api/memories/{extId}/backlinks` — 이 메모리를 가리키는 활성 메모리 목록.
   - 프론트 `react-force-graph-2d` 도입. `/map` 페이지 — 다크 캔버스 + 메모리 노드(크기는 byteSize 기준) + 엣지 + 사이드 패널의 깨진 링크. 노드 클릭 시 상세 페이지로.
   - `BacklinkPanel` 컴포넌트 — `MemoryDetailPage` 하단에 마운트해 이 메모리를 참조하는 다른 메모리를 노출.
