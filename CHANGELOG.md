@@ -5,6 +5,12 @@
 ## [Unreleased]
 
 ### Added
+- Phase 16 wiki-link-parser (code + live ✅):
+  - `WikiLinkParser` — `[[제목]]`/`[[mem_<base32>]]` 정규식 파싱, 펜스/인라인 코드 마스킹. 4건 unit 테스트
+  - `WikiLinkIndexer` — source 단위 reindex(`@Transactional`), 깨진 링크는 target_id=null
+  - `MemoryWriteFacade.create/update`가 reindex 호출 + 제목 변경 시 `BacklinkRenameService.rename`(별도 빈, AOP 정상 적용) 호출
+  - `llm/prompts/wiki-link-guide.md` 시스템 프롬프트 가이드(코드 블록 무시 안내 포함)
+  - 라이브 2026-06-28: `[[코틀린 vs 자바 v2]]` → `[[Kotlin vs Java]]` 자동 치환 + memory_links target_label 재인덱스 ✅
 - 프로젝트 부트스트랩: PRD, ARCHITECTURE, ADR(001~019), ROADMAP, UI_GUIDE, HANDOFF, DEVELOPMENT, SECURITY, CONTRIBUTING 문서 작성
 - 도메인 모델 명세 (Memory/Folder/Tag/MemoryLink/Memory ID)
 - 환경 변수 전체 명세 (`deploy/.env.example`)
