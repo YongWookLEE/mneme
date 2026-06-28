@@ -185,13 +185,18 @@ function McpConnectBuilder({ bearer }: BuilderProps): JSX.Element {
     null,
     2,
   );
-  const codexCli = `codex mcp add mneme --url ${base}/sse --header "Authorization: Bearer ${bearer}"`;
+  const codexCli = `export MNEME_API_KEY="${bearer}"\ncodex mcp add mneme --url ${base}/sse --bearer-token-env-var MNEME_API_KEY`;
+  const claudeCli = `claude mcp add --transport sse mneme ${base}/sse --header "Authorization: Bearer ${bearer}" --scope local`;
   return (
     <div className="space-y-2 text-xs text-ink-200">
       <div className="font-medium text-ink-100">MCP 연결 명령</div>
       <details className="rounded border border-ink-700 bg-ink-900 p-2">
-        <summary className="cursor-pointer">Claude Desktop / Claude.ai</summary>
+        <summary className="cursor-pointer">Claude Desktop (config JSON)</summary>
         <pre className="mt-2 overflow-auto whitespace-pre-wrap break-words font-mono">{claudeJson}</pre>
+      </details>
+      <details className="rounded border border-ink-700 bg-ink-900 p-2">
+        <summary className="cursor-pointer">Claude Code (CLI)</summary>
+        <pre className="mt-2 overflow-auto whitespace-pre-wrap break-words font-mono">{claudeCli}</pre>
       </details>
       <details className="rounded border border-ink-700 bg-ink-900 p-2">
         <summary className="cursor-pointer">Codex CLI</summary>
