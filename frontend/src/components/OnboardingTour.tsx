@@ -28,7 +28,8 @@ export default function OnboardingTour(): JSX.Element | null {
       body: (
         <p>
           Mneme는 여러 AI 클라이언트가 공유하는 영구 메모리 저장소입니다. 폴더 트리에 메모리를
-          정리하고, 의미 기반 검색으로 다시 찾고, MCP로 어디서든 같은 기억을 호출하세요.
+          정리하고, 의미 기반 검색으로 다시 찾고, MCP로 어디서든 같은 기억을 호출하세요. 자세한
+          사용법은 상단의 <Link to="/help" className="underline">도움말</Link>을 참고하세요.
         </p>
       ),
     },

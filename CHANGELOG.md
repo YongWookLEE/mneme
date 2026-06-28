@@ -5,6 +5,22 @@
 ## [Unreleased]
 
 ### Added
+- 사용 가이드 페이지 `/help` — Mneme란·핵심 개념·페이지 안내·MCP 도구 11종·wiki link 동작·메모리 저장 시 LLM 흐름·피드백 학습·데이터 포터빌리티·보안 정책·단축키·FAQ를 한곳에 정리. 좌측 anchor 목차로 점프. Shell 헤더에 "도움말" 탭 + OnboardingTour 1단계에서 링크
+- ADR-021~025 추가:
+  - ADR-021 MCP Reactor SecurityContext 전파(Micrometer ContextPropagation)
+  - ADR-022 본문 [[link]] 동기 인덱스 + backlink rename 별도 빈
+  - ADR-023 폴더 인덱스 LLM 합성 정적 스냅샷
+  - ADR-024 lint 4룰(broken/orphan/stub/dup-title), 자동 수정 없음
+  - ADR-025 피드백 시스템 프롬프트 자동 inject
+
+### Changed
+- README — 현재 상태(M1~M8 완료) 명시 + 도움말 페이지 안내 추가
+- ARCHITECTURE — 디렉토리 트리에 `wiki/`·`oauth/` 모듈 추가 + 모듈 경계 갱신 + Flyway V1~V5 표
+- PRD — MVP 범위 항목별 구현 상태 ✅/⚠/❌ 표시 + M8 Wiki 확장 항목 추가 + MVP 제외 사항을 deferred phase로 명시
+- UI_GUIDE — 실제 라우트(/help, /lint, /data, /usage, /audit, /connect, /map)와 폴더 인덱스·피드백·backlink 패널 반영
+- DEVELOPMENT — 시드 데이터 → SELFHOST §4-A 키 직접 발급 절차로 교체 + Flyway V1~V5 현재 적용 표 추가
+- CONTRIBUTING — 셀프호스팅 사용자 안내에 SELFHOST/TROUBLESHOOTING/BACKUP 링크 추가
+
 - Phase 21 folder-index (code + live ✅, M8 진행):
   - V4 folder_indexes 테이블 + FolderIndex 엔티티 + Repository
   - ChatService.synthesizeFolderIndex + llm/prompts/folder-index.md(주제별 그루핑 + `[[wiki-link]]` 자동 + 빈 곳 추측)

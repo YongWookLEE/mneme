@@ -297,3 +297,71 @@
 **대안**:
 - `spring-ai-starter-model-openai`: 자동 설정 편하지만 의존성·옵션 매핑 학습 비용.
 - LangChain4j: 추상화 풍부하나 ADR-001 Spring 생태계 단일화 원칙과 어긋남.
+
+## ADR-021: MCP 도구 실행 시 SecurityContext를 Micrometer ContextPropagation으로 전파
+
+**상태**: accepted (2026-06-28)
+
+**결정**: Spring AI MCP server가 Reactor `boundedElastic` 스케줄러로 도구를 dispatch 하면서 servlet 스레드의 `SecurityContextHolder`(ThreadLocal)가 도구 메서드에서 사라지는 문제를 `McpContextPropagationConfig`로 해결한다. Micrometer Context Propagation의 `ThreadLocalAccessor`에 SecurityContext를 등록하고 `Hooks.enableAutomaticContextPropagation()`을 켠다.
+
+**이유**: 도구 메서드가 `AuthenticatedUserResolver.currentUserId()`를 호출해 격리·인가를 일관되게 적용하려면 ThreadLocal이 그대로 보여야 한다. Reactor Context 사용으로 전면 재설계하는 비용 대신 Micrometer 표준 통합을 사용.
+
+**트레이드오프**: 의존성에 `io.micrometer:context-propagation` 1.1.x가 필요(Spring Boot 3 stack에 이미 포함). 다른 ThreadLocal(RequestContextHolder 등)도 자동으로 전파되므로 의도하지 않은 부작용 가능 — 도구 단위 격리 테스트로 회귀 방지.
+
+**대안**:
+- ToolContext 파라미터로 sessionId를 받아 별도 sessionId→userId 맵 lookup: MCP SDK 변경에 취약.
+- `MODE_INHERITABLETHREADLOCAL` SecurityContextHolder 전략: 스레드 풀 재사용 환경에서 신뢰 어려움.
+
+## ADR-022: 본문 [[link]] 인덱스 동기 갱신 + 별도 빈으로 backlink rename
+
+**상태**: accepted (2026-06-28)
+
+**결정**: `MemoryWriteFacade`가 메모리 create/update 시 `WikiLinkIndexer.reindex(userId, sourceId, content)`로 `memory_links` 테이블을 source 단위로 비우고 재삽입한다. 제목이 바뀌면 별도 빈 `BacklinkRenameService.rename(userId, oldTitle, newTitle, except)`을 호출해 다른 메모리 본문의 `[[oldTitle]]`을 `[[newTitle]]`로 일괄 치환하고 인덱스를 다시 만든다.
+
+**이유**: 본문이 관계의 진실(ADR-018)이므로 인덱스를 lazy로 두면 mn_relations·/map이 stale을 보여 준다. 동기 갱신은 ~10명·~수천 메모리 규모에서 충분히 빠르고 결과가 곧 보이는 UX 이득이 크다. `@Transactional` 메서드를 같은 클래스에서 호출하면 Spring AOP 프록시가 적용되지 않으므로 backlink rename은 별도 빈으로 분리해야 트랜잭션이 유효하게 동작한다.
+
+**트레이드오프**: 메모리 수가 만 건을 넘으면 rename cascade는 비용이 증가. 그 시점에 비동기 잡으로 분리한다(미래 phase).
+
+**대안**:
+- LISTEN/NOTIFY 기반 비동기 reindex: 즉시 표시 안 되는 UX 후퇴.
+- 본문 안에 `<a data-target="…">` 등 별도 마크업: 마크다운의 휴대성·옵시디언 호환 손실.
+
+## ADR-023: 폴더 인덱스는 LLM이 합성한 정적 스냅샷
+
+**상태**: accepted (2026-06-28)
+
+**결정**: 폴더마다 `FolderIndex` 테이블 한 행을 두고, 사용자가 명시적으로 "재생성"을 누르면 그 폴더 안 메모리 목록(제목+요약)을 `ChatService.synthesizeFolderIndex`에 전달해 마크다운 한 페이지를 받는다. 자동 백그라운드 잡은 두지 않는다.
+
+**이유**: 메모리 추가·수정마다 LLM을 자동 호출하면 토큰 비용이 폭주한다. 폴더 단위 요약은 "지금 한번 봐 두자" 정도의 빈도라 사용자 트리거가 적절하다. 합성 결과는 시스템 프롬프트(`folder-index.md`)로 주제별 그루핑 + `[[wiki-link]]` 자동 삽입 + 빈 곳 추측까지 일관되게 받는다.
+
+**트레이드오프**: 사용자가 누르지 않으면 stale. 추후 폴더 변경 횟수 임계치 기반 자동 재생성 옵션을 둘 수 있다.
+
+**대안**:
+- 폴더 변경 트리거: 토큰 폭주.
+- 실시간 합성(요청 시점에 매번 LLM 호출): 응답 지연 + 비용.
+
+## ADR-024: lint 룰 4종, 사용자 검토 워크플로 우선
+
+**상태**: accepted (2026-06-28)
+
+**결정**: `LintService.runAll`이 다음 4룰을 본인 활성 메모리에서 감지한다 — `broken`(target_id=null), `orphan`(source/target 어디에도 안 잡힘), `stub`(byteSize<120B), `dup-title`(같은 폴더 동일 제목 소문자 비교). 결과는 카테고리별 카운트 + 이슈 리스트로 반환. 자동 수정은 하지 않는다.
+
+**이유**: 자동 수정은 신뢰 가능한 룰만 가능한데, "외톨이"·"미완성" 같은 룰은 사용자 의도가 들어가야 한다. lint는 "여기 봐 주세요" 신호만 주고 수정은 사용자가 직접 한다.
+
+**트레이드오프**: 감지하지 못하는 약점(모순된 진술, 잘못된 분류 등)은 별도 phase. 룰 추가는 인터페이스 안정성 위해 같은 4룰 안에 detail 메시지로 확장.
+
+**대안**: LLM 기반 약점 감지 — 비용·일관성 문제로 후속.
+
+## ADR-025: 사용자 피드백은 시스템 프롬프트 후미에 자동 inject
+
+**상태**: accepted (2026-06-28)
+
+**결정**: `MemoryFeedback` 테이블에 사용자가 남긴 👍/👎 + 노트를 저장하고, `FeedbackHintBuilder`가 `ChatService.call` 호출 직전 시스템 프롬프트 후미에 최근 8건(부정 우선 정렬)을 자동으로 append한다. 별도 학습 잡이나 가중치 모델은 두지 않는다.
+
+**이유**: ~10명 규모에서 별도 ML 파이프라인은 비용·복잡도가 과하다. 프롬프트 컨텍스트로 최근 신호를 주는 것만으로도 분류·요약·태그 정확도가 개선된다. 즉시 반영되고, 피드백을 지우면 다음 호출부터 영향이 사라져 거버넌스도 단순하다.
+
+**트레이드오프**: 8건 ≈ 200~500 토큰이 시스템 프롬프트에 추가되어 비용 약간 증가. 부정 우선 정렬이 긍정 신호를 묻히게 할 수 있어 향후 가중치 튜닝 여지.
+
+**대안**:
+- 별도 fine-tune 또는 LoRA: 비용·복잡도·재현성 모두 무거움.
+- 임베딩 기반 user preference 모델: 데이터 부족 단계에서 의미 약함.

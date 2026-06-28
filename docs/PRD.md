@@ -58,33 +58,49 @@
 - **외부 노출**: `mem_<base32 26자>` — URL/CLI 친화. 예: `mem_2v8gqj4z7n3kh5p9r1t6w0xy2a`
 - **내부 저장**: UUID v7 그대로 (인덱스 효율)
 
-## MVP 범위
+## MVP 범위 (구현 완료, 2026-06-28)
 
-- Google OAuth 로그인 + `mn_<32B base62>` API 키 발급/폐기/회전
-- MCP 서버 (Streamable HTTP) + 11개 도구(`mn_schema, mn_whoami, mn_list, mn_read, mn_search, mn_write, mn_update, mn_archive, mn_restore, mn_relations, mn_surface`). `mn_write`/`mn_update`는 본문 안 `[[wiki-link]]`를 자동 파싱해 `memory_links` 인덱스를 갱신, `mn_relations`는 이 인덱스를 조회(이웃·backlink·깨진 링크 표시)
-- REST API (MCP와 동일 기능, 대시보드도 같은 API 사용)
-- 메모리 저장 시 OpenAI 임베딩 + GPT-4o-mini 자동 분류·요약·태깅
-- PostgreSQL + pgvector 하이브리드 검색 (벡터 + tsvector + 가중치 α)
-- 대시보드: 폴더 트리, 마크다운 뷰어/인라인 편집, 검색바·필터(폴더/태그/날짜)·정렬(최신/관련도/제목), 빈 상태·에러·로딩, 본문 안 `[[link]]` 클릭 시 대상 메모리 이동
-- `/map` 페이지: 본문 `[[link]]` 기반 관계 그래프 시각화 (옵시디언 graph view 등가물), 노드 클릭 시 본문 미리보기, 깨진 링크 강조
-- `/archive` 페이지: archive(`mn_archive`) 된 메모리 일괄 보기·복구(`mn_restore`), "같은 경로에 활성 메모리 존재 시 복구 불가" 안내
-- 키보드 단축키: `Cmd/Ctrl+K`(검색), `Cmd/Ctrl+N`(새 메모리), `Cmd/Ctrl+S`(저장), `Cmd/Ctrl+E`(편집), `Cmd/Ctrl+G`(맵 열기), `Esc`(닫기/취소), 폴더 트리 방향키 탐색, `/`(검색 포커스)
-- API 키 관리 UI: 발급/폐기/이름 수정/마지막 사용 시각/일일 사용량. 발급 직후 **MCP 연결 명령 자동 생성기** 노출 — 클라이언트 토글(Claude Code/Codex) + scope 토글(local/user/project) → `claude mcp add --transport http ...` 명령을 클립보드 복사 가능
-- 사용자별 데이터 격리 (모든 쿼리 user_id 강제, 자동 회귀 테스트)
-- Rate limiting (사용자별 분당/일별, write는 더 엄격)
-- OpenAI 토큰 사용량 추적 + 임계치 경고 (대시보드 배너 + 이메일)
-- 데이터 export (`GET /api/export` → 마크다운 zip + manifest.json)
-- 데이터 import (Mneme zip 또는 일반 마크다운 zip, 충돌 시 사용자 선택: 건너뜀/덮어쓰기/이름 변경)
-- 감사 로그 (API 키 발급/폐기/회전, 메모리 archive/restore, OAuth 인증, export/import, 계정 삭제), 본인 활동만 조회 가능
-- 온보딩 4단계 투어 (첫 메모리 → 키 발급 → 클라이언트 연결 → 검색)
-- 클라이언트 연결 가이드 페이지 (Claude.ai, ChatGPT, Codex CLI, REST 예제 + 스크린샷)
-- Docker Compose 단일 명령 실행
-- 셀프호스팅 가이드 (`deploy/README.md`)
+> 모든 항목 ✅ = phase 01~17 + 21~23 + 31~32 완료. ⚠ = 부분 / 사용자 검증 대기. ❌ = 의도 deferred.
 
-## MVP 제외 사항
+- ✅ Google OAuth 로그인 + `mn_<32B base62>` API 키 발급/폐기/회전 (phase 03·04)
+- ✅ MCP 서버(SSE + 메시지 엔드포인트) + 11개 도구. 본문 `[[link]]` 자동 인덱스 + `mn_relations` (phase 09·16)
+- ✅ MCP OAuth DCR + Authorization Code(PKCE) + access/refresh 토큰 (phase 10)
+- ✅ REST API — MCP와 동일 기능, 대시보드도 같은 API 사용 (phase 05~07)
+- ✅ 메모리 저장 시 OpenAI 임베딩 + gpt-4o-mini 자동 분류·요약·태깅 (phase 06)
+- ✅ PostgreSQL + pgvector 하이브리드 검색 (벡터 α + tsvector β + 트라이그램 γ, env로 조정) (phase 07)
+- ✅ 대시보드: 폴더 트리·마크다운 뷰어/편집(낙관적 락 ConflictPanel)·검색·아카이브·키 빌더 (phase 11~12)
+- ✅ `/map` force-directed 그래프 + 깨진 링크 사이드 패널 + 메모리 상세 backlink 패널 (phase 17)
+- ✅ `/archive` 페이지 + 복구 (활성 동일 제목 충돌 시 409) (phase 11 step 3)
+- ⚠ 키보드 단축키: `⌘/Ctrl+K`(검색 포커스)만 구현. 나머지(`Cmd+N`/`Cmd+S` 등)는 후속.
+- ✅ API 키 관리 UI + MCP 연결 명령 빌더(Claude Desktop·Claude Code·Codex CLI 스니펫)
+- ✅ 사용자별 데이터 격리: 모든 리포지토리 user_id 강제 + `IsolationRegressionTest`(서비스·MCP 도구) (phase 02~08·09)
+- ✅ Rate limit(Caffeine 분/일/쓰기 분리) + 토큰 한도 가드(`TokenQuotaGuard`) (phase 08)
+- ⚠ 사용량 추적 + 대시보드 배너 ✅ (`/usage`). 이메일 임계치 알림은 phase 33 deferred
+- ✅ Export `GET /api/export` zip(manifest.json + memories/*.md frontmatter) (phase 13)
+- ✅ Import 2단계 흐름(preview → apply, 항목별 skip/replace/create-new) (phase 13)
+- ✅ 감사 로그 — 본인 이벤트만 `/audit` (응답에서 ip/UA 노출 금지) (phase 14)
+- ✅ 온보딩 4단계 투어 + `/connect` 클라이언트 가이드 페이지 (phase 12)
+- ✅ Docker Compose 단일 명령 실행 (phase 01)
+- ✅ 셀프호스팅 가이드(`docs/SELFHOST.md` + `docs/TROUBLESHOOTING.md` + `docs/BACKUP.md`) (phase 31~32)
 
-- lint 도구(모순·고립·누락 감지 배치 잡), 폴더별 `index.md` LLM 자동 유지
-- 백그라운드 자동 관계 추론(LLM 분석 잡). 관계는 본문 `[[link]]`로만, 명령형으로만 생성
+### M8 Wiki 확장 (추가 구현, 2026-06-28)
+
+- ✅ 폴더별 LLM 합성 인덱스 — 주제별 그루핑 + `[[wiki-link]]` 자동 + 빈 곳 추측 (phase 21)
+- ✅ 검토(lint) — broken / orphan / stub / dup-title 4룰 (phase 22)
+- ✅ 피드백 학습 — 👍/👎 + 노트 → 다음 LLM 호출 system prompt 자동 inject (phase 23)
+- ✅ 사용 가이드 페이지 `/help` — 서비스·페이지·MCP 도구·내부 흐름·FAQ 한곳에 정리
+
+## MVP 제외 사항 (당분간)
+
+- 사용자별 토큰 사용량 임계치 이메일/Slack 알림(phase 33)
+- 메모리 본문 envelope encryption — 디스크 암호화로 갈음(phase 34)
+- 첨부 파일·이미지(phase 35)
+- 메모리/폴더 읽기 전용 공유 링크(phase 36)
+- 추가 OAuth 제공자 GitHub/Apple 등(phase 37)
+- 모바일 PWA(phase 38)
+- 외부 호스팅·도메인·HTTPS — 사용자 결정 대기(phase 30)
+- LLM 기반 모순 감지(현재 lint는 규칙 기반 4룰만)
+- 백그라운드 자동 관계 추론. 관계는 본문 `[[link]]`로만, 명령형으로만 생성
 - 검토(review) 패널, 사용자 피드백 학습 루프
 - 폴더·메모리 공유, 다중 사용자 협업, 읽기 전용 공개 링크
 - 결제·구독·요금제

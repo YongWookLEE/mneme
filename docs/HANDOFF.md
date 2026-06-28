@@ -6,8 +6,9 @@
 
 ## 마지막 업데이트
 
-- 시각: 2026-06-28 — **MVP 코드 작업 일단락**. 사용자가 로컬 단독 사용 단계로 진입(외부 노출 시점 미정).
-- **현재 운영 형태**: `docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d`로 localhost에서만 동작. 외부 클라이언트(Claude Desktop·Codex CLI) 한 종 검증 완료(phase 15 step 1).
+- 시각: 2026-06-28 — **상세 사용 가이드 `/help` 페이지 + 전체 문서 최신화 완료**. 로컬 단독 사용 단계 유지.
+- **신규 진입점**: 대시보드 우상단 "도움말" 탭(`/help`) — Mneme란·핵심 개념·페이지별 동작·MCP 도구·내부 LLM 흐름·보안·FAQ 한곳에 정리. README와 docs는 ADR-021~025 추가, MVP 범위/모듈 경계/마이그레이션 표/UI 라우트 모두 현재 상태 반영.
+- **현재 운영 형태**: `docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d`로 localhost에서만 동작. 외부 클라이언트는 Codex CLI 한 종 검증 완료(phase 15 step 1).
 - **다음 작업 트리거**: 사용자가 사용 중 발견한 불편·버그를 보고 → 그 부분만 보정. 또는 외부 노출(호스팅) 결정 → phase 30 재개.
 - **deferred 큐**: phase 30(호스팅 결정), phase 33(사용량 알림), 34(at-rest 암호화), 35(첨부), 36(공유 링크), 37(추가 OAuth), 38(PWA), phase 15 step 2-4(Claude Desktop·ChatGPT·스크린샷).
 - 직전 작업(phase 31 selfhost-guide + phase 32 backup-restore):

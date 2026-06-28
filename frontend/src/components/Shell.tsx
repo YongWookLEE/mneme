@@ -92,6 +92,14 @@ export default function Shell(): JSX.Element {
           >
             감사
           </NavLink>
+          <NavLink
+            to="/help"
+            className={({ isActive }) =>
+              `rounded px-2 py-1 hover:text-ink-100 ${isActive ? "text-ink-100" : ""}`
+            }
+          >
+            도움말
+          </NavLink>
           <button
             type="button"
             onClick={() => {

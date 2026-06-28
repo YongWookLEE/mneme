@@ -68,10 +68,15 @@
 - `/`: 대시보드. 좌측 사이드바는 전역 공통. 메인은 다음 블록 — (1) 상단 4개 stat 카드(`전체 메모리`/`오늘 저장`/`연결 수`/`검색 정확도`) — 큰 숫자 + 라벨 + 지난 7일 대비 delta + 아이콘 원형 배경, (2) 좌측 컬럼: `오늘의 개요` 카드(sparkle 아이콘 + 한 문단 + 핵심 주제/활발한 영역/추천 액션 bullet) → `최근 메모리` 테이블(탭: 전체/문서/노트/이미지/코드, 컬럼: 제목/경로/태그 칩/수정 시간) → `활동 로그`(아이콘 + 한 줄 + 시간), (3) 우측 컬럼: `빠른 작업` 2×2(새 메모리/검색 시작/관계 맵 열기/API 키 관리) → `관계 맵 미리보기`(미니 그래프 + 범례, "전체 맵 열기" 링크) → `AI 인사이트` 카드(sparkle + 문장 + 신뢰도 배지). (4) 하단: `시스템 상태`(저장소·인덱싱·검색·API 정상/주의/오류). 메모리 편집 화면은 별도(/m/:id) 또는 사이드 패널 — 본문 안 `[[link]]` 클릭 시 이동, 메타 영역에 backlink 목록
 - `/map`: 본문 `[[link]]` 기반 관계 그래프. **그래프 자체는 완전 모노크롬**(흰/회색 스케일, 색조 사용 안 함). 노드 = 메모리, 엣지 = `[[link]]`. 레이아웃 — 좌상단 "지식 맵 ▾" 드롭다운, 우상단 토글 4종(`필터` / `레이아웃` / `깊이 N` / `톱니바퀴`), 좌하단 컨트롤(`+` / `−` / 전체화면 / 중앙 복귀), 좌하단 범례 카드(노드 유형/연결 유형/그래프 통계), 하단 가운데 인터랙션 힌트(`드래그 이동` / `스크롤 확대·축소` / `더블클릭 중심`). 노드 색 정책 — 기본 `#9B9CA0`(회색), 큰(연결 많은) 노드는 더 큼 + 약간 더 밝음 `#C8C9CC`, 호버는 `#E6E7E8`, **선택은 순백 `#FFFFFF` + 외광 glow**. 엣지는 `#3A3B40` 1px, 선택 노드의 1-hop 엣지만 `#9B9CA0`. 깨진 링크는 위험색 점선·경고 아이콘. 우측 패널: 선택된 메모리 — 제목 + 경로(breadcrumb) + 태그 칩 + 요약 문단 + `연결 정보` 4개 stat(직접 / 간접 / 참조됨 / 참조함) + `연결 메모 (N)` 리스트(각 행: 제목, 경로, 직접/간접 배지, ⋮ 액션) + "메모 열기" CTA
 - `/archive`: archive(`mn_archive`) 된 메모리 일괄 보기. 항목 행에 "복구" 버튼(`mn_restore`). 같은 경로에 활성 메모리 존재 시 버튼 비활성 + 사유 툴팁
-- `/keys`: API 키 발급/목록/폐기/회전 + 마지막 사용 시각 + 일일 사용량. **MCP 명령 빌더** — 키 발급 직후 패널에서 클라이언트 토글(Claude Code / Codex) + scope 토글(local / user / project) → `claude mcp add --transport http mneme https://<host>/mcp --header "Authorization: Bearer mn_..." --scope <scope>` 명령 표시 + 복사 버튼. 평문 키는 화면 새로고침 시 사라짐
-- `/guide`: 클라이언트별 연결 가이드 (Claude.ai, ChatGPT 개발자 모드, Codex CLI, REST 예제, 스크린샷)
-- `/settings`: 계정 정보, 토큰 사용량, 활동(감사 로그), 데이터 export/import, 계정 삭제
-- `/activity`: 본인 감사 로그 (테이블, 필터: 액션/날짜)
+- `/keys`: API 키 발급/목록/폐기/회전 + 마지막 사용 시각. **MCP 명령 빌더** — 키 발급 직후 패널에 Claude Desktop(JSON) / Claude Code(CLI `--header`) / Codex CLI(`--bearer-token-env-var`) 3종 스니펫 + 복사 버튼. 평문 키는 화면 새로고침 시 사라짐
+- `/connect`: 클라이언트별 연결 가이드 — Claude Code OAuth/API, Codex CLI OAuth/API, ChatGPT Developer mode 절차 (스크린샷 자리는 phase 15 step 4에서 채움)
+- `/data`: Export(zip 다운로드, manifest.json + memories/*.md) + Import(zip 업로드 → preview 충돌 표시 → 항목별 skip/replace/create-new 선택 → apply)
+- `/usage`: 최근 30일 일별 토큰·요청 수. 상단에 요약 카드 4종(요청·임베딩·LLM in·LLM out)
+- `/audit`: 본인 보안 활동 최신순(키 발급/폐기, 메모리 archive 등). user_id/ip/UA 응답 노출 금지
+- `/lint`: 깨진 링크·외톨이·미완성·제목 중복 4룰. 카테고리 카운트 카드 + 이슈 리스트 → 메모리로 점프
+- `/help`: **상세 이용 가이드** — Mneme란·핵심 개념·페이지 안내·MCP 도구 11종·wiki link 동작·메모리 저장 시 LLM 흐름·피드백 학습·데이터 포터빌리티·보안 정책·단축키·FAQ. 좌측 anchor 목차로 점프
+- 메모리 상세 페이지 하단: **FeedbackBar**(target select + note + 👍/👎 + 최근 5건) + **BacklinkPanel**(이 메모리를 가리키는 다른 메모리)
+- 폴더 페이지 상단: **FolderIndexPanel**(LLM 합성 요약 + 전체 보기 토글 + 생성/재생성 버튼)
 
 ## 상태별 UI 가이드
 

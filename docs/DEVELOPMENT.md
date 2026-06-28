@@ -102,26 +102,45 @@ npm --prefix frontend run dev
 | `npm --prefix frontend run e2e` | Playwright E2E (백엔드 가동 필요) |
 | `npm --prefix frontend run lint:fix` | 프론트 포맷 수정 |
 
-## 시드 데이터
+## 시드 데이터 / 첫 키 발급
 
-로컬 개발 편의를 위해 `deploy/scripts/seed-dev.sh`가 더미 사용자 1명 + 메모리 5개를 생성한다.
+로컬에서 OAuth 없이 빠르게 시작하려면 Google 로그인을 한 번 한 다음 DB에 직접 키를 삽입한다.
+[`docs/SELFHOST.md` §4-A](SELFHOST.md)에 상세 절차가 있다.
 
 ```bash
-docker compose ... exec backend /opt/mneme/scripts/seed-dev.sh
+# 1) 브라우저에서 한 번 로그인
+open http://localhost:8080/oauth2/authorization/google
+
+# 2) user_id 확인 + 키 발급 (sha256 해시 직접 삽입)
+docker compose -f deploy/docker-compose.yml exec postgres \
+  psql -U mneme -d mneme -c "SELECT id, email FROM users;"
+
+PLAIN="mn_$(openssl rand -hex 24)"
+HASH=$(echo -n "$PLAIN" | shasum -a 256 | cut -d' ' -f1)
+docker compose -f deploy/docker-compose.yml exec -T postgres \
+  psql -U mneme -d mneme -c \
+  "INSERT INTO api_keys (id, user_id, name, key_hash, prefix, created_at) \
+   VALUES (gen_random_uuid(), '<YOUR_USER_ID>', 'dev', decode('$HASH','hex'), '${PLAIN:0:8}', now());"
+echo "키: $PLAIN"
 ```
 
 ## DB 마이그레이션
 
+현재 적용된 버전(2026-06-28):
+
+| 버전 | 설명 |
+|---|---|
+| V1 | 13개 테이블 + pgvector/pg_trgm 확장 + ivfflat 임베딩 인덱스 + tsv 트리거 |
+| V2 | `oauth_clients.user_id` NULL 허용(DCR 익명 등록) |
+| V3 | `audit_events.ip` INET→TEXT |
+| V4 | `folder_indexes` 테이블 (phase 21) |
+| V5 | `memory_feedback` 테이블 + 인덱스 (phase 23) |
+
 새 마이그레이션 추가:
 
 ```bash
-# 다음 버전 번호 확인
 ls backend/src/main/resources/db/migration/
-
-# 새 파일 (예: V3__add_memory_links.sql)
-$EDITOR backend/src/main/resources/db/migration/V3__add_memory_links.sql
-
-# 로컬 적용
+$EDITOR backend/src/main/resources/db/migration/V6__your_change.sql
 ./gradlew :backend:flywayMigrate
 ```
 

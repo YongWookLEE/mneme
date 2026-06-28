@@ -9,8 +9,10 @@ Mneme는 비상업·1인 유지보수 프로젝트지만, 셀프호스팅 사용
 직접 운영하는 인스턴스를 띄우는 사용자.
 
 - 우선 [`README.md`](../README.md) 빠른 시작 → [`docs/DEVELOPMENT.md`](DEVELOPMENT.md) 환경 설정
-- 운영 배포는 [`deploy/README.md`](../deploy/README.md) (스크린샷 포함, phase 31에서 완성)
-- 보안 체크리스트는 [`docs/SECURITY.md`](SECURITY.md)
+- 운영 배포 단계별 가이드: [`docs/SELFHOST.md`](SELFHOST.md)
+- 자주 막히는 곳: [`docs/TROUBLESHOOTING.md`](TROUBLESHOOTING.md)
+- 백업·복구: [`docs/BACKUP.md`](BACKUP.md)
+- 보안 체크리스트: [`docs/SECURITY.md`](SECURITY.md)
 - 문제 발생 시: GitHub Discussions (예정) 또는 이슈
 
 ### 코드 기여자

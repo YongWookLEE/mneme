@@ -13,18 +13,20 @@ Mneme는 백엔드 단일 프로세스(Spring Boot)와 SPA 프론트엔드(React
 │   └── src/
 │       ├── main/
 │       │   ├── kotlin/com/mneme/
-│       │   │   ├── api/                # REST 컨트롤러 (대시보드용, 세션 인증)
-│       │   │   ├── mcp/                # MCP 도구 정의 (@Tool, Bearer 인증)
-│       │   │   ├── auth/               # Google OAuth + API 키 + DCR
-│       │   │   ├── memory/             # Memory/Folder/Tag 도메인
-│       │   │   ├── llm/                # OpenAI 어댑터 (임베딩/요약/분류)
+│       │   │   ├── api/                # REST 컨트롤러 (대시보드 + Bearer 통합)
+│       │   │   ├── mcp/                # MCP 도구 11종 + Reactor 컨텍스트 전파
+│       │   │   ├── oauth/              # MCP OAuth DCR + Authorization Code(PKCE) + Bearer 토큰 인증 필터
+│       │   │   ├── auth/               # Google OAuth + `mn_` API 키 발급/검증
+│       │   │   ├── memory/             # Memory/Folder/Tag 도메인 + MemoryWriteFacade
+│       │   │   ├── wiki/               # [[wiki-link]] 파서·인덱서·backlink rename·folder index·lint·feedback hint
+│       │   │   ├── llm/                # OpenAI 어댑터 (임베딩/요약/분류/folder index 합성)
 │       │   │   ├── search/             # 하이브리드 검색 (벡터 + tsvector + trgm)
-│       │   │   ├── export/             # 데이터 export/import
-│       │   │   ├── security/           # rate limit, CORS, 헤더, PII 마스킹
-│       │   │   ├── observability/      # 메트릭, 감사 로그, 사용량 추적
-│       │   │   ├── notification/       # 이메일 발송 (SendGrid/SES 어댑터)
-│       │   │   ├── persistence/        # JPA 엔티티, 리포지토리, Flyway
-│       │   │   ├── id/                 # UUID v7 생성, base32 인코딩
+│       │   │   ├── export/             # 데이터 export/import (Caffeine 세션 기반 preview/apply)
+│       │   │   ├── security/           # rate limit, CORS, 헤더, PII 마스킹, 토큰 한도, 인증 필터
+│       │   │   ├── observability/      # Micrometer/Prometheus, 감사 로그, 사용량 daily 집계
+│       │   │   ├── notification/       # 이메일 발송 (후속 phase)
+│       │   │   ├── persistence/        # JPA 엔티티, 리포지토리, Flyway V1~V5
+│       │   │   ├── id/                 # UUID v7 생성, Crockford base32 인코딩
 │       │   │   └── config/             # Spring 설정, 프로파일별 오버라이드
 │       │   └── resources/
 │       │       ├── application.yml
@@ -76,18 +78,20 @@ Mneme는 백엔드 단일 프로세스(Spring Boot)와 SPA 프론트엔드(React
 
 ## 모듈 경계
 
-- `auth`: Google OAuth 콜백, 세션 발급, API 키 발급·해시·검증·회전, DCR 엔드포인트, 감사 이벤트 발행
-- `memory`: Memory/Folder/Tag/MemoryLink 엔티티 관리. 본문 `[[wiki-link]]` 파서 포함(메모리 저장/수정 트랜잭션 내 동기 호출). **모든 메서드 user_id 첫 인자 강제**
-- `llm`: Spring AI OpenAI 어댑터. 시스템 프롬프트 상수, 사용자 입력은 인용 블록으로 감쌈
-- `search`: 하이브리드 검색. SQL은 prepared statement, user_id 조건 누락 거부
-- `mcp`: 11개 `mn_*` 도구를 `@Tool`로 등록. Streamable HTTP. Bearer 인증
-- `api`: 대시보드 REST. 세션 쿠키 + CSRF 토큰
-- `export`: zip 생성/파싱. 마크다운 파일 + manifest.json 형식
-- `security`: rate limit, CORS, 보안 헤더, 응답 직렬화 마스킹
-- `observability`: Micrometer 메트릭, 감사 로그, 사용자별 토큰 사용량 집계
-- `notification`: 이메일 어댑터 (SendGrid/SES). 임계치 알림, 계정 삭제 안내
-- `id`: UUID v7 생성, base32 인코딩(소문자, 26자, prefix `mem_`/`fld_` 등)
-- `persistence`: JPA + Flyway. pgvector 컬럼은 native query
+- `auth`: Google OAuth 콜백, 세션 발급, `mn_` API 키 발급·해시·검증·회전, 감사 이벤트 발행
+- `oauth`: MCP 클라이언트용 RFC 7591 DCR + Authorization Code(PKCE S256) + access/refresh 토큰 발급 + Bearer 토큰 인증 필터(`OAuthAccessTokenAuthenticationFilter`)
+- `memory`: Memory/Folder/Tag/MemoryLink 엔티티 + `MemoryWriteFacade`(외부 호출 트랜잭션 밖 → 도메인 저장 트랜잭션 안). **모든 메서드 user_id 첫 인자 강제**
+- `wiki`: 본문 `[[wiki-link]]` 파서·`WikiLinkIndexer`(source 단위 reindex)·`BacklinkRenameService`(별도 빈)·`FolderIndexService`(LLM 합성 인덱스)·`LintService`(broken/orphan/stub/dup-title)·`FeedbackService`+`FeedbackHintBuilder`(시스템 프롬프트 자동 inject)
+- `llm`: OpenAI REST 어댑터(`OpenAiClient` + `EmbeddingService` + `ChatService`). 시스템 프롬프트는 ClassPath 리소스(`llm/prompts/*.md`), 사용자 입력은 `PromptGuard.fence`로 인용 블록 + 8KB 절단
+- `search`: 하이브리드 검색 단일 native SQL. SQL은 prepared statement, user_id 조건 누락 거부. 가중치 α(0.6)/β(0.3)/γ(0.1)
+- `mcp`: 11개 `mn_*` 도구를 `@Tool`로 등록. WebMVC SSE(`/sse` GET + `/mcp/message` POST). Bearer 인증은 `ApiKeyAuthenticationFilter` + `OAuthAccessTokenAuthenticationFilter` 이중. `McpContextPropagationConfig`가 Reactor `boundedElastic` 워커에 SecurityContext 자동 전파
+- `api`: REST 컨트롤러(memory/folder/tag/search/keys/feedback/lint/usage/audit/graph/backlinks/export/import). 인증은 `AuthenticatedUserResolver`로 OAuth2User/Bearer 통일
+- `export`: zip stream `ExportService`(manifest.json + memories/*.md frontmatter) + `ImportService`(Caffeine 30분 TTL preview/apply 2단계)
+- `security`: rate limit(Caffeine 분/일/쓰기 분리) + CORS + 보안 헤더 + `TokenQuotaGuard` + PII 마스킹 + `AuthenticatedUserResolver`
+- `observability`: Micrometer Prometheus, 감사 이벤트 + `UsageDailyRepository` 네이티브 집계, `PgUsageRecorder`
+- `notification`: 이메일 어댑터(후속 phase)
+- `id`: UUID v7 생성, Crockford base32(소문자 26자) 인코딩, prefix(`mem_`/`fld_`/`tag_`/`key_`/`usr_`/`oac_` 등)
+- `persistence`: JPA + Flyway V1~V5. pgvector·tsvector·jsonb·inet 컬럼은 native query 사용
 
 ## 환경 변수 명세
 
@@ -379,12 +383,22 @@ usage_daily (
 ## 마이그레이션 정책 (Flyway)
 
 - 위치: `backend/src/main/resources/db/migration/`
-- 파일명: `V{버전}__{설명}.sql` (예: `V1__init.sql`, `V2__add_audit_events.sql`)
+- 파일명: `V{버전}__{설명}.sql`
 - **forward-only**: rollback 마이그레이션 만들지 않음. 잘못된 마이그레이션은 새 버전으로 보정
 - 모든 마이그레이션은 트랜잭션 안에서 실행, 실패 시 롤백
 - 컬럼 추가는 nullable로 시작 → 백필 → NOT NULL 변경 (3단계)
 - 인덱스 추가는 `CREATE INDEX CONCURRENTLY` (DDL 트랜잭션 밖에서 별도 실행, Flyway `@Repeatable` 또는 별도 잡)
 - 마이그레이션은 idempotent하게 작성 (`IF NOT EXISTS` 등)
+
+### 현재 적용된 마이그레이션
+
+| 버전 | 설명 |
+|---|---|
+| V1 | 13개 테이블 + pgvector/pg_trgm 확장 + ivfflat 임베딩 인덱스 + tsv 트리거 |
+| V2 | `oauth_clients.user_id` NULL 허용(DCR 익명 등록 지원) |
+| V3 | `audit_events.ip` INET→TEXT (JDBC null 파라미터가 inet과 충돌하는 문제 해결) |
+| V4 | `folder_indexes` 테이블 (폴더별 LLM 합성 인덱스) |
+| V5 | `memory_feedback` 테이블 + 인덱스 (사용자 👍/👎 피드백) |
 
 ## 트랜잭션 경계
 
