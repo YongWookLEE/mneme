@@ -30,6 +30,7 @@ class ChatService(
     private val summarizePrompt: String by lazy { loadPrompt("llm/prompts/summarize.md") }
     private val classifyPrompt: String by lazy { loadPrompt("llm/prompts/classify-folder.md") }
     private val suggestTagsPrompt: String by lazy { loadPrompt("llm/prompts/suggest-tags.md") }
+    private val folderIndexPrompt: String by lazy { loadPrompt("llm/prompts/folder-index.md") }
 
     /** 본문 한 줄 요약. 실패 시 null. */
     fun summarize(
@@ -48,6 +49,30 @@ class ChatService(
         val raw = safeCall { call(userId, classifyPrompt, user) }?.trim() ?: return null
         return candidates.firstOrNull { it.equals(raw, ignoreCase = true) }
     }
+
+    /**
+     * 폴더 합성 인덱스 — 폴더 이름 + 메모리 목록(제목+요약)으로 마크다운 한 페이지 생성. 실패 시 null.
+     */
+    fun synthesizeFolderIndex(
+        userId: UUID,
+        folderName: String,
+        memories: List<FolderIndexMemory>,
+    ): String? {
+        if (memories.isEmpty()) return null
+        val listing =
+            memories.joinToString("\n") { m ->
+                val summaryLine = m.summary?.let { " — $it" } ?: ""
+                "- ${m.title}$summaryLine"
+            }
+        val user = "폴더: $folderName\n메모리:\n$listing"
+        return safeCall { call(userId, folderIndexPrompt, PromptGuard.fence(user)) }?.trim()
+    }
+
+    /** [synthesizeFolderIndex] 입력 DTO. */
+    data class FolderIndexMemory(
+        val title: String,
+        val summary: String?,
+    )
 
     /** 최대 5개 태그 제안. 실패 또는 파싱 실패 시 빈 리스트. */
     fun suggestTags(

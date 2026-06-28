@@ -1,0 +1,12 @@
+{
+  "project": "Mneme",
+  "phase": "21-folder-index",
+  "goal": "폴더마다 그 안 메모리들을 LLM이 요약·재구성한 인덱스를 자동 생성·유지한다.",
+  "milestone": "M8 — Wiki 확장",
+  "steps": [
+    { "step": 1, "name": "schema-and-service",  "status": "completed", "summary": "Flyway V4 folder_indexes 테이블. FolderIndex 엔티티 + Repository. ChatService.synthesizeFolderIndex + folder-index.md 시스템 프롬프트(주제별 그루핑 + [[wiki-link]] 자동 삽입 + 빈 곳 추측). FolderIndexService(LLM 호출은 트랜잭션 밖, saveIndex는 안)." },
+    { "step": 2, "name": "rest-endpoints",      "status": "completed", "summary": "FolderIndexController GET /api/folders/{ext}/index + POST /api/folders/{ext}/index/rebuild. 격리는 AuthenticatedUserResolver. 없으면 404, 빈 폴더는 400." },
+    { "step": 3, "name": "frontend-panel",      "status": "completed", "summary": "FolderIndexPanel — 요약/전체 보기 토글 + 생성/재생성 버튼. MemoryListPage가 폴더 선택 시 상단에 노출. typecheck/lint/test/build 통과." },
+    { "step": 4, "name": "live-and-commit",     "status": "completed", "summary": "라이브 2026-06-28: phase06-live 폴더 3개 메모리 → LLM이 주제별(데이터베이스/프론트엔드/프로그래밍 언어) 그루핑 + [[wiki-link]] 자동 + 빈 곳 추측까지 정상 생성." }
+  ]
+}

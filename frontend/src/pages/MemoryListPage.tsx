@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import type { JSX } from "react";
 import { fetchMemories, type MemoryDto } from "../api/memories";
+import FolderIndexPanel from "../components/FolderIndexPanel";
 import Sidebar from "../components/Sidebar";
 
 /**
@@ -29,6 +30,7 @@ export default function MemoryListPage(): JSX.Element {
         <h1 className="mb-4 text-lg font-medium tracking-tight">
           {folderExtId ? "폴더 메모리" : "모든 메모리"}
         </h1>
+        {folderExtId && <FolderIndexPanel folderExtId={folderExtId} />}
         {isLoading && <div className="text-sm text-ink-300">불러오는 중…</div>}
         {isError && (
           <div className="text-sm text-red-300">오류: {(error as Error).message}</div>
