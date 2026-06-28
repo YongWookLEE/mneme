@@ -4,6 +4,9 @@
   "goal": "Claude.ai · ChatGPT Developer mode · Codex CLI 실제 연결 + 격리 회귀 종합 실행.",
   "milestone": "M7 — 포터빌리티·운영",
   "steps": [
-    { "step": 1, "name": "live-validation", "status": "blocked", "blocked_reason": "사용자 직접 실행 필요 — Claude.ai / ChatGPT Developer mode / Codex CLI에서 OAuth 동의 + MCP 연결 + 도구 호출 확인. 결과 캡처는 phase 12 /connect 가이드의 스크린샷 자리에 채움." }
+    { "step": 1, "name": "codex-cli",       "status": "completed", "summary": "2026-06-28: codex mcp add mneme --url http://localhost:8080/sse --bearer-token-env-var MNEME_API_KEY로 등록 후 도구 호출 정상. M5 종단 검증 완료." },
+    { "step": 2, "name": "claude-desktop",  "status": "pending", "summary": "" },
+    { "step": 3, "name": "chatgpt-web",     "status": "pending", "summary": "" },
+    { "step": 4, "name": "screenshots",     "status": "pending", "summary": "각 클라이언트 연결 화면 캡처 → /connect 가이드의 스크린샷 자리 교체" }
   ]
 }
