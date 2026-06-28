@@ -19,11 +19,18 @@ export default defineConfig({
     host: true,
     port: 5173,
     strictPort: true,
-    proxy: {
-      "/api": "http://localhost:8080",
-      "/actuator": "http://localhost:8080",
-      "/mcp": "http://localhost:8080",
-    },
+    proxy: (() => {
+      const target = process.env.VITE_DEV_API_TARGET ?? "http://localhost:8080";
+      return {
+        "/api": target,
+        "/actuator": target,
+        "/mcp": target,
+        "/sse": target,
+        "/oauth": target,
+        "/oauth2": target,
+        "/login": target,
+      };
+    })(),
   },
   build: {
     outDir: "dist",
