@@ -10,6 +10,7 @@ import AuditPage from "./pages/AuditPage";
 import ConnectGuidePage from "./pages/ConnectGuidePage";
 import ExportImportPage from "./pages/ExportImportPage";
 import KeysPage from "./pages/KeysPage";
+import LintPage from "./pages/LintPage";
 import MapPage from "./pages/MapPage";
 import UsagePage from "./pages/UsagePage";
 import MemoryDetailPage from "./pages/MemoryDetailPage";
@@ -47,6 +48,7 @@ export default function App(): JSX.Element {
               <Route path="audit" element={<AuditPage />} />
               <Route path="usage" element={<UsagePage />} />
               <Route path="map" element={<MapPage />} />
+              <Route path="lint" element={<LintPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
           </Routes>

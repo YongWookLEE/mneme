@@ -45,6 +45,14 @@ export default function Shell(): JSX.Element {
             맵
           </NavLink>
           <NavLink
+            to="/lint"
+            className={({ isActive }) =>
+              `rounded px-2 py-1 hover:text-ink-100 ${isActive ? "text-ink-100" : ""}`
+            }
+          >
+            검토
+          </NavLink>
+          <NavLink
             to="/keys"
             className={({ isActive }) =>
               `rounded px-2 py-1 hover:text-ink-100 ${isActive ? "text-ink-100" : ""}`

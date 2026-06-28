@@ -10,17 +10,6 @@
           }
         ]
       }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "scripts/hooks/codex-stop-check.sh"
-          }
-        ]
-      }
     ]
   }
 }

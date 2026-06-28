@@ -1,0 +1,11 @@
+{
+  "project": "Mneme",
+  "phase": "22-lint-tools",
+  "goal": "본인 메모리의 약점(깨진 링크·외톨이·미완성·중복)을 감지하고 검토 패널에서 사용자가 확인·해결할 수 있게 한다.",
+  "milestone": "M8 — Wiki 확장",
+  "steps": [
+    { "step": 1, "name": "rules-and-service",  "status": "completed", "summary": "LintService.runAll 4가지 룰 — broken(memory_links target_id=null), orphan(source/target 어디에도 없는 외톨이), stub(byteSize<120B), dup-title(같은 폴더 동일 제목 소문자 비교)." },
+    { "step": 2, "name": "rest-endpoint",      "status": "completed", "summary": "LintController GET /api/lint → LintReport(카테고리별 카운트 + 이슈 리스트). 격리 first-arg userId. 라이브: broken 1 + orphan 2 + stub 2 정상." },
+    { "step": 3, "name": "frontend-page",      "status": "completed", "summary": "LintPage /lint — 카테고리 카드 + 이슈 리스트(메모리로 점프). Shell '검토' 탭. typecheck/lint/test/build 통과." }
+  ]
+}
