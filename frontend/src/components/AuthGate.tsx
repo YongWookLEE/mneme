@@ -51,6 +51,16 @@ export default function AuthGate({ children }: Props): JSX.Element {
         >
           입장
         </button>
+        <div className="border-t border-ink-700 pt-4 text-center text-xs text-ink-400">
+          또는 한 번 Google 계정으로 로그인한 뒤 <code>/keys</code>에서 키를 발급할 수도 있습니다.
+          <br />
+          <a
+            href="/oauth2/authorization/google"
+            className="mt-2 inline-block underline hover:text-ink-100"
+          >
+            Google로 로그인
+          </a>
+        </div>
       </form>
     </div>
   );
