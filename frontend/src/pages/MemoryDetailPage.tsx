@@ -9,6 +9,7 @@ import {
   type MemoryDto,
 } from "../api/memories";
 import BacklinkPanel from "../components/BacklinkPanel";
+import FeedbackBar from "../components/FeedbackBar";
 import MarkdownView from "../components/MarkdownView";
 import Sidebar from "../components/Sidebar";
 
@@ -194,6 +195,7 @@ export default function MemoryDetailPage(): JSX.Element {
               </div>
             )}
 
+            <FeedbackBar memoryExtId={data.extId} />
             <BacklinkPanel memoryExtId={data.extId} />
           </article>
         )}

@@ -6,8 +6,13 @@
 
 ## 마지막 업데이트
 
-- 시각: 2026-06-28 (phase 15 첫 클라이언트 — Codex CLI 종단 검증 완료)
-- 직전 작업(phase 15 client-validation step 1 codex-cli):
+- 시각: 2026-06-28 (phase 21·22·23 Wiki 확장 3종 완료 — **M8 달성**)
+- 직전 작업(phase 21·22·23 Wiki 확장):
+  - **phase 21 folder-index**: V4 folder_indexes 테이블 + FolderIndex 엔티티/Repository + ChatService.synthesizeFolderIndex + folder-index.md 시스템 프롬프트(주제별 그루핑 + `[[wiki-link]]` 자동 + 빈 곳 추측). GET/POST `/api/folders/{ext}/index{/rebuild}`. 프론트 FolderIndexPanel — 폴더 선택 시 상단 노출 + 요약/전체 보기 토글. 라이브: 3건 메모리 → 주제별 분류 + wiki-link 자동 ✅
+  - **phase 22 lint-tools**: LintService.runAll 4룰(broken/orphan/stub<120B/dup-title) + LintController GET `/api/lint` + 프론트 LintPage `/lint` 카테고리 카드 + Shell '검토' 탭. 라이브: broken 1 + orphan 2 + stub 2 정상 감지.
+  - **phase 23 review-feedback**: V5 memory_feedback 테이블 + FeedbackService(targets={folder,summary,tags,index,general}, values={up,down}). FeedbackController POST/GET `/api/memories/{ext}/feedback`. 핵심: **FeedbackHintBuilder가 ChatService.call에 자동 주입** — 시스템 프롬프트 후미에 최근 8건(부정 우선 정렬) 피드백 자동 append. 다음 LLM 요약·분류·태그·인덱스 호출이 자동 반영. 프론트 FeedbackBar(target+note+👍👎+최근 5건). 라이브: up/down 2건 저장·조회 정상.
+  - **M8 — Wiki 확장 마일스톤 달성**. 다음은 운영 배포(phase 30~32).
+- 이전 작업(phase 15 client-validation step 1 codex-cli):
   - 사용자 직접 Codex CLI에서 `codex mcp add mneme --url http://localhost:8080/sse --bearer-token-env-var MNEME_API_KEY`로 등록 후 도구 호출 정상.
   - Heirmos 가이드(dashboard.heirmos.com/guide) 참고로 `/connect` 페이지와 `/keys` 빌더 위젯의 Codex/Claude CLI 스니펫을 수정(`--bearer-token-env-var` 환경변수 패턴, OAuth 방식 병기).
   - **M5 종단 라이브 검증 완료** — Spring AI MCP server + Reactor 컨텍스트 전파 + OAuth Bearer 인증이 실제 클라이언트 한 종에서 통과. Claude Desktop / ChatGPT는 사용자가 추가 검증 예정.

@@ -1,0 +1,11 @@
+{
+  "project": "Mneme",
+  "phase": "23-review-feedback",
+  "goal": "사용자가 메모리 단위로 '맞아요/틀렸어요' 피드백을 남기면 다음 LLM 호출의 system prompt에 자동 반영되어 정확도를 점진적으로 끌어올린다.",
+  "milestone": "M8 — Wiki 확장",
+  "steps": [
+    { "step": 1, "name": "schema-and-service",  "status": "completed", "summary": "V5 memory_feedback 테이블 + MemoryFeedback 엔티티 + Repository. FeedbackService.submit/listForMemory/listAll. ALLOWED_TARGETS={folder,summary,tags,index,general} + ALLOWED_VALUES={up,down}." },
+    { "step": 2, "name": "rest-endpoint",       "status": "completed", "summary": "FeedbackController POST/GET /api/memories/{ext}/feedback. 라이브: 2건 저장 + 조회 정상." },
+    { "step": 3, "name": "frontend-buttons",    "status": "completed", "summary": "FeedbackBar 컴포넌트 — target select + note input + 👍/👎 버튼 + 최근 5건 리스트. MemoryDetailPage 하단에 마운트. FeedbackHintBuilder 빈으로 ChatService.call에 자동 주입(시스템 프롬프트 후미에 최근 피드백 8건 부정 우선 정렬). 빌드/테스트 통과." }
+  ]
+}

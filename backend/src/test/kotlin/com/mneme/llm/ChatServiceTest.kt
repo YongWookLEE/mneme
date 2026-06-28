@@ -19,7 +19,7 @@ class ChatServiceTest {
     private val recorder = mockk<UsageRecorder>(relaxed = true)
     private val quotaGuard = mockk<TokenQuotaGuard>(relaxed = true)
     private val mapper = ObjectMapper()
-    private val service = ChatService(openAi, LlmProperties(apiKey = "test"), recorder, quotaGuard, mapper, Clock.systemUTC())
+    private val service = ChatService(openAi, LlmProperties(apiKey = "test"), recorder, quotaGuard, null, mapper, Clock.systemUTC())
 
     private fun chatResponse(content: String): String =
         """

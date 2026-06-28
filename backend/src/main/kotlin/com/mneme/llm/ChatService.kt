@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.mneme.security.QuotaExceededException
 import com.mneme.security.TokenQuotaGuard
+import com.mneme.wiki.FeedbackHintBuilder
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
@@ -22,6 +23,7 @@ class ChatService(
     private val props: LlmProperties,
     private val usageRecorder: UsageRecorder,
     private val quotaGuard: TokenQuotaGuard,
+    private val feedbackHintBuilder: FeedbackHintBuilder? = null,
     private val mapper: ObjectMapper = ObjectMapper(),
     private val clock: Clock = Clock.systemUTC(),
 ) {
@@ -103,8 +105,10 @@ class ChatService(
         system: String,
         user: String,
     ): String {
+        val hint = feedbackHintBuilder?.buildFor(userId) ?: ""
+        val effectiveSystem = if (hint.isBlank()) system else system + hint
         try {
-            quotaGuard.requireChatBudget(userId, (system.length + user.length) / 3)
+            quotaGuard.requireChatBudget(userId, (effectiveSystem.length + user.length) / 3)
         } catch (e: QuotaExceededException) {
             throw OpenAiException.RateLimited(e.message ?: "chat quota exceeded")
         }
@@ -114,7 +118,7 @@ class ChatService(
                 "temperature" to 0.2,
                 "messages" to
                     listOf(
-                        mapOf("role" to "system", "content" to system),
+                        mapOf("role" to "system", "content" to effectiveSystem),
                         mapOf("role" to "user", "content" to user),
                     ),
             )

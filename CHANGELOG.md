@@ -5,6 +5,24 @@
 ## [Unreleased]
 
 ### Added
+- Phase 21 folder-index (code + live ✅, M8 진행):
+  - V4 folder_indexes 테이블 + FolderIndex 엔티티 + Repository
+  - ChatService.synthesizeFolderIndex + llm/prompts/folder-index.md(주제별 그루핑 + `[[wiki-link]]` 자동 + 빈 곳 추측)
+  - FolderIndexService(LLM 호출은 트랜잭션 밖, save는 안) + GET/POST `/api/folders/{ext}/index{/rebuild}`
+  - 프론트 `FolderIndexPanel` + `MemoryListPage` 상단 마운트
+  - 라이브: 3건 메모리 → 주제별(데이터베이스/프론트엔드/프로그래밍) 분류 + `[[wiki-link]]` 정상
+- Phase 22 lint-tools (code + live ✅, M8 진행):
+  - `LintService.runAll` 4룰: broken(target_id=null), orphan(어디에도 연결 X), stub(<120B), dup-title(같은 폴더 동일 제목)
+  - `LintController` `GET /api/lint` → `LintReport(counts + issues)`
+  - 프론트 `LintPage /lint` 카테고리 카드 + 이슈 리스트 + Shell '검토' 탭
+  - 라이브: broken 1 / orphan 2 / stub 2 감지
+- Phase 23 review-feedback (code + live ✅, **M8 달성**):
+  - V5 memory_feedback 테이블 + 엔티티/Repository
+  - `FeedbackService` targets={folder,summary,tags,index,general} × values={up,down}
+  - **핵심**: `FeedbackHintBuilder`가 `ChatService.call`에 자동 주입 — 시스템 프롬프트 후미에 최근 8건(부정 우선 정렬) 피드백 자동 append. 다음 LLM 호출이 자동 반영
+  - `FeedbackController` POST/GET `/api/memories/{ext}/feedback`
+  - 프론트 `FeedbackBar`(target+note+👍👎+최근 5건) + `MemoryDetailPage` 하단 마운트
+  - 라이브: up/down 2건 저장·조회 정상
 - Phase 17 memory-map-ui (code + live ✅, **M6.5 달성**):
   - `GraphController` `GET /api/graph` — 활성 메모리 노드 + wiki-link 엣지 + 깨진 링크
   - `BacklinksController` `GET /api/memories/{extId}/backlinks`

@@ -42,9 +42,9 @@
 
 | Phase | 상태 | 목적 | 메모 |
 |-------|------|------|------|
-| 21 folder-index | deferred | 폴더별 `index.md` LLM 자동 생성·유지 (배치 잡) | |
-| 22 lint-tools | deferred | 모순·고립·누락 감지, 대시보드 검토 패널 | |
-| 23 review-feedback | deferred | 사용자 피드백(맞아요/틀렸어요) → 분류 가중치 조정 | |
+| 21 folder-index | completed | 폴더마다 LLM 합성 인덱스(주제별 그루핑 + `[[wiki-link]]` 자동 + 빈 곳 추측). `FolderIndexPanel` 폴더 페이지 상단 노출 | |
+| 22 lint-tools | completed | broken/orphan/stub/dup-title 4룰 `LintService` + `/api/lint` + 프론트 `/lint` 검토 페이지 | |
+| 23 review-feedback | completed | `memory_feedback` 테이블 + POST/GET `/api/memories/{ext}/feedback` + `FeedbackHintBuilder`가 ChatService system prompt에 최근 피드백 자동 append + 프론트 `FeedbackBar` | |
 
 > phase 20 wiki-links는 MVP phase 16으로 승격(2026-06-27, ADR-018).
 
