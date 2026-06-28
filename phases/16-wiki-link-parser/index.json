@@ -1,0 +1,11 @@
+{
+  "project": "Mneme",
+  "phase": "16-wiki-link-parser",
+  "goal": "본문 안 [[wiki-link]]를 파싱해 memory_links 인덱스를 동기 갱신 + 제목 변경 시 backlink 본문 일괄 치환.",
+  "milestone": "M6.5 — 위키 경험",
+  "steps": [
+    { "step": 1, "name": "parser-and-indexer",   "status": "completed", "summary": "WikiLinkParser([[제목]] 또는 [[mem_…]], 펜스/인라인 코드 마스킹) + WikiLinkIndexer(deleteAllByUserIdAndSourceId 후 본문 파싱→insert, 깨진 링크는 target_id=null). MemoryWriteFacade.create/update에서 reindex 호출. WikiLinkParserTest 4건 통과(제목/extId 분리, 펜스 무시, 인라인 무시, 빈 본문). 라이브: [[자바와 비교]] 인덱스 저장 확인." },
+    { "step": 2, "name": "rename-cascade",       "status": "completed", "summary": "BacklinkRenameService 별도 빈 — self-invocation 한계 우회. MemoryWriteFacade.update에서 oldTitle≠newTitle이면 BacklinkRenameService.rename 호출 → 다른 메모리 본문 [[oldTitle]]을 [[newTitle]]로 치환 + 재인덱스. 라이브: '코틀린 vs 자바 v2' → 'Kotlin vs Java' 변경 → 소스 본문 자동 치환 + target_label 재인덱스 ✅" },
+    { "step": 3, "name": "prompt-and-tests",     "status": "completed", "summary": "llm/prompts/wiki-link-guide.md 시스템 프롬프트 가이드 추가 (LLM이 [[link]] 자연 삽입 + 코드 블록 무시 안내). WikiLinkParserTest 4건 + 라이브 backend build 통과." }
+  ]
+}

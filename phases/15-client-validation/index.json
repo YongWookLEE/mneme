@@ -1,0 +1,9 @@
+{
+  "project": "Mneme",
+  "phase": "15-client-validation",
+  "goal": "Claude.ai · ChatGPT Developer mode · Codex CLI 실제 연결 + 격리 회귀 종합 실행.",
+  "milestone": "M7 — 포터빌리티·운영",
+  "steps": [
+    { "step": 1, "name": "live-validation", "status": "blocked", "blocked_reason": "사용자 직접 실행 필요 — Claude.ai / ChatGPT Developer mode / Codex CLI에서 OAuth 동의 + MCP 연결 + 도구 호출 확인. 결과 캡처는 phase 12 /connect 가이드의 스크린샷 자리에 채움." }
+  ]
+}
