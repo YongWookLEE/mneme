@@ -1,0 +1,11 @@
+{
+  "project": "Mneme",
+  "phase": "31-selfhost-guide",
+  "goal": "다른 사람이 자기 서버에 Mneme를 띄울 수 있도록 단계별 가이드 + 트러블슈팅 문서화.",
+  "milestone": "M9 — 운영 안착",
+  "steps": [
+    { "step": 1, "name": "selfhost-md",    "status": "completed", "summary": "docs/SELFHOST.md — 서버 준비 → Google OAuth 등록 → OpenAI 키 → .env → docker compose up → 첫 키 발급 → MCP 연결 → 운영 점검 → 업데이트 → 데이터 이전까지 단계별 안내" },
+    { "step": 2, "name": "troubleshoot",   "status": "completed", "summary": "docs/TROUBLESHOOTING.md — 부팅·인증·MCP 클라이언트·데이터·LLM·성능 카테고리별 자주 막히는 케이스와 해결법" },
+    { "step": 3, "name": "readme-links",   "status": "completed", "summary": "README.md 문서 표에 SELFHOST/TROUBLESHOOTING/BACKUP 링크 추가" }
+  ]
+}

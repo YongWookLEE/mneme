@@ -52,9 +52,9 @@
 
 | Phase | 상태 | 목적 | 메모 |
 |-------|------|------|------|
-| 30 hosting-decision | deferred | VPS/AWS/Fly.io 실제 호스팅 선택 + 도메인 + Caddy 설정 | MVP 동작 후 |
-| 31 selfhost-guide | deferred | 다른 사람용 README + OAuth 등록 스크린샷 + 트러블슈팅 | |
-| 32 backup-restore | deferred | pg_dump cron + B2/S3 업로드 + restore 스크립트 + 정기 복구 리허설 | |
+| 30 hosting-decision | blocked (사용자) | 호스팅 제공자·도메인 결정 + Caddy 설정 적용 — 사용자 선택 필요 | |
+| 31 selfhost-guide | completed | `docs/SELFHOST.md` 단계별 가이드 + `docs/TROUBLESHOOTING.md` 자주 막힘 케이스 | |
+| 32 backup-restore | completed | `deploy/scripts/backup/{backup,restore}.sh` + Dockerfile + crontab 03:00 UTC + overlay `docker-compose.backup.yml` + `docs/BACKUP.md`(B2 가이드 + 분기 리허설) | |
 | 33 usage-quotas-alerts | deferred | 사용자별 토큰 사용량 대시보드 + 이메일 알림 + 관리자 메트릭 | |
 | 34 at-rest-encryption | deferred | 메모리 본문 컬럼 envelope encryption 옵션 | 민감 데이터 사용자 대비 |
 | 35 attachments | deferred | 이미지·파일 업로드 (외부 객체 스토리지) | |

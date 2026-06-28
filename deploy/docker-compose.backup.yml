@@ -1,0 +1,41 @@
+name: mneme
+
+# 백업 컨테이너는 옵셔널 — 다음 명령으로 합쳐 실행한다.
+#   docker compose \
+#     -f deploy/docker-compose.yml \
+#     -f deploy/docker-compose.backup.yml \
+#     --env-file deploy/.env up -d
+#
+# 환경변수는 deploy/.env에 추가:
+#   MNEME_BACKUP_S3_BUCKET=<bucket>
+#   MNEME_BACKUP_S3_PREFIX=mneme-backup
+#   AWS_ACCESS_KEY_ID=<key>
+#   AWS_SECRET_ACCESS_KEY=<secret>
+#   AWS_ENDPOINT_URL=https://s3.us-west-002.backblazeb2.com   # B2 예시 (AWS는 비워둠)
+#   AWS_DEFAULT_REGION=auto
+#
+# 수동 백업: docker compose exec backup /scripts/backup.sh
+# 복원: docker compose exec backup /scripts/restore.sh <object-name>
+
+services:
+  backup:
+    build:
+      context: ./scripts/backup
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      MNEME_DB_HOST: postgres
+      MNEME_DB_USER: ${MNEME_DB_USER:-mneme}
+      MNEME_DB_NAME: mneme
+      MNEME_DB_PASSWORD: ${MNEME_DB_PASSWORD}
+      MNEME_BACKUP_S3_BUCKET: ${MNEME_BACKUP_S3_BUCKET}
+      MNEME_BACKUP_S3_PREFIX: ${MNEME_BACKUP_S3_PREFIX:-mneme-backup}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-auto}
+      AWS_ENDPOINT_URL: ${AWS_ENDPOINT_URL:-}
+    networks:
+      - mneme

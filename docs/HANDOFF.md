@@ -6,8 +6,12 @@
 
 ## 마지막 업데이트
 
-- 시각: 2026-06-28 (phase 21·22·23 Wiki 확장 3종 완료 — **M8 달성**)
-- 직전 작업(phase 21·22·23 Wiki 확장):
+- 시각: 2026-06-28 (phase 31·32 운영 안착 문서·스크립트 완료, phase 30 호스팅 결정만 사용자 대기)
+- 직전 작업(phase 31 selfhost-guide + phase 32 backup-restore):
+  - **phase 31**: `docs/SELFHOST.md`(서버 준비 → Google OAuth 등록 → OpenAI 키 → .env → 첫 키 발급 → MCP 연결 → 점검 → 업데이트 → 데이터 이전) + `docs/TROUBLESHOOTING.md`(부팅·인증·MCP·데이터·LLM·성능 카테고리 자주 막힘 케이스). README 문서 표에 3개 신규 링크 추가.
+  - **phase 32**: `deploy/scripts/backup/{backup.sh,restore.sh}` — env 기반 pg_dump → gzip → `aws s3 cp`(B2/R2 호환 `AWS_ENDPOINT_URL`). `deploy/scripts/backup/Dockerfile`(postgres:16-alpine + awscli + dcron) + crontab(03:00 UTC) + `deploy/docker-compose.backup.yml` overlay. `docs/BACKUP.md`(B2 가이드 + 환경변수 + 별도 환경 복원 + 분기 리허설). `mneme-backup:latest` 이미지 빌드 검증 통과.
+  - **phase 30 hosting-decision**: status=blocked. 사용자가 호스팅 제공자(Hetzner/Fly.io/B2/자체 VPS)와 도메인을 결정해야 진행.
+- 이전 작업(phase 21·22·23 Wiki 확장):
   - **phase 21 folder-index**: V4 folder_indexes 테이블 + FolderIndex 엔티티/Repository + ChatService.synthesizeFolderIndex + folder-index.md 시스템 프롬프트(주제별 그루핑 + `[[wiki-link]]` 자동 + 빈 곳 추측). GET/POST `/api/folders/{ext}/index{/rebuild}`. 프론트 FolderIndexPanel — 폴더 선택 시 상단 노출 + 요약/전체 보기 토글. 라이브: 3건 메모리 → 주제별 분류 + wiki-link 자동 ✅
   - **phase 22 lint-tools**: LintService.runAll 4룰(broken/orphan/stub<120B/dup-title) + LintController GET `/api/lint` + 프론트 LintPage `/lint` 카테고리 카드 + Shell '검토' 탭. 라이브: broken 1 + orphan 2 + stub 2 정상 감지.
   - **phase 23 review-feedback**: V5 memory_feedback 테이블 + FeedbackService(targets={folder,summary,tags,index,general}, values={up,down}). FeedbackController POST/GET `/api/memories/{ext}/feedback`. 핵심: **FeedbackHintBuilder가 ChatService.call에 자동 주입** — 시스템 프롬프트 후미에 최근 8건(부정 우선 정렬) 피드백 자동 append. 다음 LLM 요약·분류·태그·인덱스 호출이 자동 반영. 프론트 FeedbackBar(target+note+👍👎+최근 5건). 라이브: up/down 2건 저장·조회 정상.

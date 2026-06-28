@@ -1,0 +1,3 @@
+# 매일 03:00 UTC에 백업 실행. 컨테이너 환경변수가 그대로 cron 환경에 전달되지 않으므로
+# 스크립트가 자체적으로 env를 읽도록 한다(BusyBox crond는 명시 export 없이도 동작).
+0 3 * * * /scripts/backup.sh >> /var/log/mneme-backup.log 2>&1

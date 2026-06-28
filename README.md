@@ -54,7 +54,10 @@ docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d
 | [`docs/UI_GUIDE.md`](docs/UI_GUIDE.md) | 화면 — 톤, 색, 페이지, 단축키 |
 | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | 로컬 개발 — env 변수, OAuth/OpenAI 발급, 자주 쓰는 명령 |
 | [`docs/SECURITY.md`](docs/SECURITY.md) | 보안 — 정책, 취약점 신고 |
-| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | 기여·셀프호스팅 가이드 |
+| [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | 기여 가이드 |
+| [`docs/SELFHOST.md`](docs/SELFHOST.md) | 셀프호스팅 단계별 안내 (서버·OAuth·OpenAI·첫 키 발급) |
+| [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) | 자주 막히는 문제와 해결 |
+| [`docs/BACKUP.md`](docs/BACKUP.md) | 백업·복구(pg_dump cron + 객체 스토리지) |
 | [`CHANGELOG.md`](CHANGELOG.md) | 변경 이력 |
 
 ## 라이선스

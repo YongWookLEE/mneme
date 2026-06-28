@@ -1,0 +1,11 @@
+{
+  "project": "Mneme",
+  "phase": "32-backup-restore",
+  "goal": "매일 자동 pg_dump → 객체 스토리지(B2/S3/MinIO) 업로드 + restore 스크립트 + 정기 복구 리허설.",
+  "milestone": "M9 — 운영 안착",
+  "steps": [
+    { "step": 1, "name": "scripts",         "status": "completed", "summary": "deploy/scripts/backup/backup.sh + restore.sh — env 기반(MNEME_BACKUP_S3_*, AWS_* 환경변수), pg_dump → gzip → aws s3 cp, restore는 반대 흐름. AWS_ENDPOINT_URL로 B2/R2 호환." },
+    { "step": 2, "name": "cron-compose",    "status": "completed", "summary": "deploy/scripts/backup/Dockerfile(postgres:16-alpine + awscli + dcron) + crontab(03:00 UTC) + deploy/docker-compose.backup.yml(overlay). 빌드 검증 통과(mneme-backup:latest)." },
+    { "step": 3, "name": "restore-and-doc", "status": "completed", "summary": "docs/BACKUP.md — B2 가이드 + 환경변수 + 컨테이너 띄우기 + 수동/예약 백업 + 별도 환경 복원 + 보존 정책(lifecycle) + 분기 리허설 체크리스트 + 트러블슈팅 표." }
+  ]
+}
