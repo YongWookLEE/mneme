@@ -1,6 +1,7 @@
 package com.mneme.llm
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.mneme.security.TokenQuotaGuard
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -16,8 +17,9 @@ import java.util.UUID
 class ChatServiceTest {
     private val openAi = mockk<OpenAiClient>()
     private val recorder = mockk<UsageRecorder>(relaxed = true)
+    private val quotaGuard = mockk<TokenQuotaGuard>(relaxed = true)
     private val mapper = ObjectMapper()
-    private val service = ChatService(openAi, LlmProperties(apiKey = "test"), recorder, mapper, Clock.systemUTC())
+    private val service = ChatService(openAi, LlmProperties(apiKey = "test"), recorder, quotaGuard, mapper, Clock.systemUTC())
 
     private fun chatResponse(content: String): String =
         """

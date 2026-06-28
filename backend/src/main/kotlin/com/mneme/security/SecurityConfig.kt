@@ -35,6 +35,7 @@ class SecurityConfig {
         successHandler: ObjectProvider<OAuth2LoginSuccessHandler>,
         apiKeyRepository: ApiKeyRepository,
         apiKeyGenerator: ApiKeyGenerator,
+        rateLimitFilter: RateLimitFilter,
     ): SecurityFilterChain {
         http.authorizeHttpRequests { auth ->
             auth
@@ -83,6 +84,8 @@ class SecurityConfig {
             ApiKeyAuthenticationFilter(apiKeyRepository, apiKeyGenerator),
             UsernamePasswordAuthenticationFilter::class.java,
         )
+        // Rate limit은 인증 직후. RateLimitFilter는 별도 빈으로 자동 주입되지만 명시적 등록으로 순서 고정.
+        http.addFilterAfter(rateLimitFilter, ApiKeyAuthenticationFilter::class.java)
 
         // OAuth2 client registration이 환경 변수로 활성화돼 있을 때만 oauth2Login 체인 등록
         val repo = clientRegistrationRepository.ifAvailable

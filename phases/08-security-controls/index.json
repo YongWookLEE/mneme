@@ -1,0 +1,13 @@
+{
+  "project": "Mneme",
+  "phase": "08-security-controls",
+  "goal": "rate limit(분/일 + 쓰기 분리) + 일일 LLM/embed 토큰 한도 + PII 로그 마스킹 + IsolationRegressionTest 확장. M4 마일스톤.",
+  "milestone": "M4 — 보안 완전",
+  "steps": [
+    { "step": 1, "name": "rate-limit-filter",   "status": "completed", "summary": "RateLimitService(Caffeine 분/일/쓰기 분리 카운터) + RateLimitFilter(OncePerRequestFilter @Order 50). userId 또는 X-Forwarded-For/IP 키. 초과 시 429 ProblemDetail. SecurityConfig에 ApiKey 필터 뒤로 등록" },
+    { "step": 2, "name": "token-quota-guard",   "status": "completed", "summary": "TokenQuotaGuard(@Transactional readOnly): usage_daily 조회 후 estimated 합산 → 한도 초과 시 QuotaExceededException → OpenAiException.RateLimited로 변환. EmbeddingService/ChatService 호출 직전 가드. 메모리 저장은 계속(임베딩만 skip)" },
+    { "step": 3, "name": "pii-log-masking",     "status": "completed", "summary": "PiiMaskingConverter(logback ClassicConverter): mn_*, sk-*, 이메일 정규식 마스킹. logback-spring.xml의 %maskedMsg 패턴 토큰. 단위 테스트 4건 통과" },
+    { "step": 4, "name": "isolation-rest",      "status": "completed", "summary": "IsolationRegressionTest 확장: api_key revoke(다른 사용자 false), memory archive(404), api_key list 본인만. REST 레벨 전수 회귀는 phase 15(client-validation, Testcontainers)로 이관" },
+    { "step": 5, "name": "handoff-phase-09",    "status": "completed", "summary": "라이브: 쓰기 21번째 429 차단 + embed 한도 100k 초과 시 임베딩 skip(본문 저장은 계속) 확인. HANDOFF/CHANGELOG/ROADMAP 갱신. phase 09(mcp-server) 큐" }
+  ]
+}

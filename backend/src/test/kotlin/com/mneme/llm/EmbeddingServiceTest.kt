@@ -1,6 +1,7 @@
 package com.mneme.llm
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.mneme.security.TokenQuotaGuard
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -15,10 +16,11 @@ import java.util.UUID
 class EmbeddingServiceTest {
     private val openAi = mockk<OpenAiClient>()
     private val recorder = mockk<UsageRecorder>(relaxed = true)
+    private val quotaGuard = mockk<TokenQuotaGuard>(relaxed = true)
     private val props = LlmProperties(apiKey = "test", embeddingCacheMaxSize = 100, embeddingCacheTtlMinutes = 5)
     private val mapper = ObjectMapper()
     private val service =
-        EmbeddingService(openAi, props, recorder, Clock.systemUTC()).also { it.init() }
+        EmbeddingService(openAi, props, recorder, quotaGuard, Clock.systemUTC()).also { it.init() }
 
     private fun fakeEmbedding(): String =
         buildString {

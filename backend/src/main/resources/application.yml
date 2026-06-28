@@ -81,3 +81,11 @@ mneme:
     trigram-gamma: ${MNEME_SEARCH_TRIGRAM_GAMMA:0.1}
     default-limit: ${MNEME_SEARCH_DEFAULT_LIMIT:20}
     max-limit: ${MNEME_SEARCH_MAX_LIMIT:100}
+  rate-limit:
+    per-min: ${MNEME_RATE_LIMIT_PER_MIN:60}
+    per-day: ${MNEME_RATE_LIMIT_PER_DAY:5000}
+    write-per-min: ${MNEME_RATE_LIMIT_WRITE_PER_MIN:20}
+    anonymous-per-min: ${MNEME_RATE_LIMIT_ANON_PER_MIN:30}
+  token-quota:
+    embed-per-day: ${MNEME_TOKEN_LIMIT_EMBED_PER_DAY:100000}
+    llm-per-day: ${MNEME_TOKEN_LIMIT_LLM_PER_DAY:50000}

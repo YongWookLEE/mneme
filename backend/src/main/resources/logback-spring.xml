@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mneme logback 설정. PII/비밀값 자동 마스킹 컨버터 등록.
+  - %maskedMsg : 본문에서 mn_*, sk-*, 이메일을 마스킹한 메시지.
+-->
 <configuration>
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
+    <conversionRule conversionWord="maskedMsg"
+                    converterClass="com.mneme.observability.PiiMaskingConverter"/>
+
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %maskedMsg%n"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

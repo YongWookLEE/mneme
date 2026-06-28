@@ -1,6 +1,10 @@
 package com.mneme.memory
 
+import com.mneme.auth.ApiKey
+import com.mneme.auth.ApiKeyRepository
+import com.mneme.auth.ApiKeyService
 import com.mneme.id.IdFactory
+import com.mneme.observability.AuditPublisher
 import io.kotest.assertions.throwables.shouldThrow
 import io.mockk.every
 import io.mockk.mockk
@@ -69,6 +73,50 @@ class IsolationRegressionTest {
         shouldThrow<ResponseStatusException> {
             service.attach(userB, memoryId, "hello")
         }.also { assertNotFound(it.statusCode) }
+    }
+
+    /**
+     * ApiKeyService: 사용자 A의 키 ID를 사용자 B가 폐기 시도 → false(컨트롤러가 404로 변환).
+     */
+    @Test
+    fun `api key revoke 는 다른 사용자에게 false`() {
+        val apiKeyRepo = mockk<ApiKeyRepository>()
+        val keyId = idFactory.newUuid()
+        every { apiKeyRepo.findByUserIdAndId(userB, keyId) } returns null
+        val service = ApiKeyService(apiKeyRepo, mockk(relaxed = true), idFactory, mockk<AuditPublisher>(relaxed = true))
+
+        val ok = service.revoke(userB, keyId)
+        if (ok) error("isolation breach — revoke returned true for non-owner")
+    }
+
+    /**
+     * MemoryService: archive 도 동일 격리.
+     */
+    @Test
+    fun `memory archive 는 다른 사용자에게 404`() {
+        val memoryRepo = mockk<MemoryRepository>()
+        val folderRepo = mockk<FolderRepository>()
+        val memoryId = idFactory.newUuid()
+        every { memoryRepo.findByUserIdAndIdAndArchivedAtIsNull(userB, memoryId) } returns null
+        val service = MemoryService(memoryRepo, folderRepo, idFactory)
+
+        shouldThrow<ResponseStatusException> {
+            service.archive(userB, memoryId)
+        }.also { assertNotFound(it.statusCode) }
+    }
+
+    /**
+     * 사용자가 자신의 키만 조회 — 다른 사용자 키가 새지 않는지 베이스라인.
+     */
+    @Test
+    fun `api key list 는 본인 키만 반환`() {
+        val apiKeyRepo = mockk<ApiKeyRepository>()
+        val ownKey = mockk<ApiKey>(relaxed = true)
+        every { apiKeyRepo.findAllByUserIdAndRevokedAtIsNull(userB) } returns listOf(ownKey)
+        val service = ApiKeyService(apiKeyRepo, mockk(relaxed = true), idFactory, mockk<AuditPublisher>(relaxed = true))
+
+        val result = service.listActive(userB)
+        if (result.size != 1 || result[0] !== ownKey) error("isolation breach")
     }
 
     private fun assertNotFound(actual: org.springframework.http.HttpStatusCode) {

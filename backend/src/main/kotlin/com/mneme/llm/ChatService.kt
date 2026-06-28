@@ -2,6 +2,8 @@ package com.mneme.llm
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.mneme.security.QuotaExceededException
+import com.mneme.security.TokenQuotaGuard
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
@@ -19,6 +21,7 @@ class ChatService(
     private val openAi: OpenAiClient,
     private val props: LlmProperties,
     private val usageRecorder: UsageRecorder,
+    private val quotaGuard: TokenQuotaGuard,
     private val mapper: ObjectMapper = ObjectMapper(),
     private val clock: Clock = Clock.systemUTC(),
 ) {
@@ -75,6 +78,11 @@ class ChatService(
         system: String,
         user: String,
     ): String {
+        try {
+            quotaGuard.requireChatBudget(userId, (system.length + user.length) / 3)
+        } catch (e: QuotaExceededException) {
+            throw OpenAiException.RateLimited(e.message ?: "chat quota exceeded")
+        }
         val body =
             mapOf(
                 "model" to props.chatModel,

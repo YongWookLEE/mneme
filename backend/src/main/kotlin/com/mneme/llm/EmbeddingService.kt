@@ -3,6 +3,8 @@ package com.mneme.llm
 import com.fasterxml.jackson.databind.JsonNode
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.mneme.security.QuotaExceededException
+import com.mneme.security.TokenQuotaGuard
 import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -23,6 +25,7 @@ class EmbeddingService(
     private val openAi: OpenAiClient,
     private val props: LlmProperties,
     private val usageRecorder: UsageRecorder,
+    private val quotaGuard: TokenQuotaGuard,
     private val clock: Clock = Clock.systemUTC(),
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
@@ -52,6 +55,11 @@ class EmbeddingService(
         val key = sha256Hex(text)
         cache.getIfPresent(key)?.let { return it }
 
+        try {
+            quotaGuard.requireEmbedBudget(userId, estimateTokens(text))
+        } catch (e: QuotaExceededException) {
+            throw OpenAiException.RateLimited(e.message ?: "embed quota exceeded")
+        }
         val response = openAi.postEmbedding(mapOf("model" to props.embedModel, "input" to text))
         val vector = parseVector(response)
         val tokens = response.path("usage").path("total_tokens").asInt(0)
@@ -77,6 +85,8 @@ class EmbeddingService(
         }
         return out
     }
+
+    private fun estimateTokens(text: String): Int = (text.length / 3).coerceAtLeast(1)
 
     private fun sha256Hex(text: String): String {
         val md = MessageDigest.getInstance("SHA-256")

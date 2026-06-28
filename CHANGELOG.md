@@ -47,6 +47,14 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 08 security-controls (code + live ✅, M4 도달):
+  - `RateLimitService` Caffeine 분/일/쓰기 분리 카운터 + `RateLimitFilter` 429 ProblemDetail
+  - `mneme.rate-limit.*` 설정(per-min/per-day/write-per-min/anonymous-per-min)
+  - `TokenQuotaGuard`: usage_daily 조회 후 임베딩/채팅 호출 직전 한도 검사 → 초과는 `OpenAiException.RateLimited`로 변환
+  - `mneme.token-quota.*` 설정(embed-per-day=100k / llm-per-day=50k 기본)
+  - `PiiMaskingConverter` (logback): mn_*, sk-*, 이메일 자동 마스킹. `%maskedMsg` 패턴
+  - `IsolationRegressionTest` 확장(api key + memory archive 케이스)
+  - 라이브 2026-06-28: 쓰기 21번째 429 차단 + embed 100k 초과 시 임베딩 skip(본문 저장 계속) 확인
 - Phase 07 hybrid-search (code + live ✅):
   - `SearchService` 단일 네이티브 SQL — α·(1−cosine) + β·ts_rank + γ·similarity
   - `SearchProperties` (`mneme.search.*` 가중치 α=0.6 / β=0.3 / γ=0.1 + limit 1..100)
@@ -73,6 +81,9 @@
 
 #### M1 — 로컬 부팅
 - phase 01 ✅ / phase 02 ✅ → 0.1.0 후보 도달
+
+#### M4 — 보안 완전
+- phase 08 ✅ → 0.4.0 후보 도달
 
 #### M5 — MCP 라이브
 - phase 09-10 완료 시 0.5.0 후보
