@@ -28,7 +28,7 @@
 | 06 llm-adapter | completed | OpenAI REST 어댑터(임베딩 1536d + gpt-4o-mini 요약/분류/태그) + PromptGuard 펜스 + Caffeine 캐시 + usage_daily 집계 + MemoryWriteFacade. ADR-020(Spring AI는 MCP 전용) | `phases/06-llm-adapter/` |
 | 07 hybrid-search | completed | pgvector + tsvector + pg_trgm 결합 검색 + α/β/γ 가중치 + 필터(폴더/태그/날짜)·정렬. /api/search REST | `phases/07-hybrid-search/` |
 | 08 security-controls | completed | rate limit(Caffeine 분/일/쓰기) + 일일 LLM/embed 토큰 한도 가드 + PII 로그 마스킹 + IsolationRegressionTest 확장. M4 도달 | `phases/08-security-controls/` |
-| 09 mcp-server | pending | Spring AI MCP starter + 11개 `mn_*` 도구 등록 + 도구 단위 격리 테스트 | `phases/09-mcp-server/` |
+| 09 mcp-server | completed | Spring AI MCP server starter(WebMVC) + 11개 `mn_*` `@Tool` + Reactor 컨텍스트 자동 전파(Micrometer + Hooks)로 SecurityContextHolder가 boundedElastic 워커까지 전파. 라이브: tools/list 11개 + mn_whoami/mn_list/mn_search 정상 | `phases/09-mcp-server/` |
 | 10 mcp-oauth-dcr | pending | DCR 엔드포인트(/oauth/register) + Authorization Code 흐름 + access/refresh token | `phases/10-mcp-oauth-dcr/` |
 | 11 dashboard-ui | pending | 폴더 트리, 마크다운 뷰어/편집(낙관적 락 충돌 UI), 검색바·필터·정렬, 빈 상태/에러/로딩, 키보드 단축키, `/archive` 페이지, `/keys` MCP 명령 빌더 | `phases/11-dashboard-ui/` |
 | 12 onboarding-guide | pending | 첫 로그인 4단계 투어 + 클라이언트별 연결 가이드 페이지(스크린샷 자리만 미리) | `phases/12-onboarding-guide/` |

@@ -47,6 +47,13 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 09 mcp-server (code + live ✅, M5 절반):
+  - `spring-ai-bom:1.0.0` + `spring-ai-starter-mcp-server-webmvc` 의존성. application.yml `spring.ai.mcp.server.*`
+  - `MnemeTools`: 11개 `mn_*` 도구(`mn_schema/mn_whoami/mn_list/mn_read/mn_search/mn_write/mn_update/mn_archive/mn_restore/mn_relations/mn_surface`)
+  - `McpToolsConfig`: `MethodToolCallbackProvider` 빈 등록
+  - `McpContextPropagationConfig`: Micrometer Context Propagation에 SecurityContext `ThreadLocalAccessor` 등록 + `Hooks.enableAutomaticContextPropagation()` — Reactor boundedElastic 워커에 SecurityContextHolder 전파
+  - `McpToolsIsolationTest` 6건(read/archive/restore/relations 404 + whoami 본인만)
+  - 라이브 2026-06-28: GET `/sse` endpoint event 수신 → POST `/mcp/message`로 initialize + tools/list(11개 inputSchema) + mn_whoami(`sdsd1008@gmail.com`) + mn_list(폴더/메모리) + mn_search(`코틀린` → 코틀린 메모 score 0.367 1위) 모두 정상 ✅
 - Phase 08 security-controls (code + live ✅, M4 도달):
   - `RateLimitService` Caffeine 분/일/쓰기 분리 카운터 + `RateLimitFilter` 429 ProblemDetail
   - `mneme.rate-limit.*` 설정(per-min/per-day/write-per-min/anonymous-per-min)
@@ -86,7 +93,7 @@
 - phase 08 ✅ → 0.4.0 후보 도달
 
 #### M5 — MCP 라이브
-- phase 09-10 완료 시 0.5.0 후보
+- phase 09 ✅ → phase 10(OAuth DCR) 완료 시 0.5.0 후보
 
 #### M7 — 포터빌리티·운영
 - phase 13-15 완료 시 1.0.0-rc 후보

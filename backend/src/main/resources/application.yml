@@ -3,6 +3,15 @@ spring:
     name: mneme
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}
+  ai:
+    mcp:
+      server:
+        enabled: true
+        name: mneme
+        version: 0.1.0
+        type: SYNC
+        instructions: "Mneme — 사용자별 영구 메모리. 모든 도구는 mn_ prefix. 외부 ID는 base32 prefix(mem_/fld_/tag_/key_). 본문 안 [[wiki-link]]는 양방향 인덱스로 자동 반영."
+        request-timeout: 30s
   messages:
     basename: i18n/errors
     encoding: UTF-8

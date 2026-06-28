@@ -14,11 +14,13 @@ java {
 }
 
 dependencies {
+    implementation(platform("org.springframework.ai:spring-ai-bom:1.0.0"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.postgresql:postgresql")

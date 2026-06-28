@@ -1,0 +1,13 @@
+{
+  "project": "Mneme",
+  "phase": "09-mcp-server",
+  "goal": "Spring AI MCP Server starter(WebMVC) 도입 + 11개 mn_* 도구를 @Tool로 등록 + Bearer 헤더 인증 재사용 + 도구 단위 격리 테스트.",
+  "milestone": "M5 — MCP 라이브 (phase 10에서 완성)",
+  "steps": [
+    { "step": 1, "name": "starter-deps",       "status": "completed", "summary": "spring-ai-bom:1.0.0 + spring-ai-starter-mcp-server-webmvc 도입. application.yml의 spring.ai.mcp.server.* 기본 설정(name=mneme, type=SYNC, instructions). 부팅 시 'Registered tools: 11' 확인" },
+    { "step": 2, "name": "tool-principal",     "status": "completed", "summary": "기존 ApiKeyAuthenticationFilter 재사용으로 Bearer 인증. McpContextPropagationConfig: Micrometer Context Propagation API에 SecurityContext ThreadLocalAccessor 등록 + Hooks.enableAutomaticContextPropagation()으로 Reactor boundedElastic 워커까지 SecurityContextHolder 자동 전파" },
+    { "step": 3, "name": "eleven-tools",       "status": "completed", "summary": "MnemeTools: mn_schema/mn_whoami/mn_list/mn_read/mn_search/mn_write/mn_update/mn_archive/mn_restore/mn_relations/mn_surface. 모두 AuthenticatedUserResolver.currentUserId() 시작, 외부 ID는 base32 prefix. McpToolsConfig가 MethodToolCallbackProvider 빈 등록" },
+    { "step": 4, "name": "isolation-tests",    "status": "completed", "summary": "McpToolsIsolationTest 6건 통과 — mn_read/archive/restore/relations 404, mn_whoami 본인만, ext id 위장 호출도 userB 컨텍스트로 격리" },
+    { "step": 5, "name": "handoff-phase-10",   "status": "completed", "summary": "라이브 2026-06-28: SSE+/mcp/message 세션 수립 → tools/list 11개 + mn_whoami(이메일 정상) + mn_list(폴더/메모리 정상) + mn_search(코틀린 의미 검색 1위) 모두 정상. phase 10 mcp-oauth-dcr 큐" }
+  ]
+}
