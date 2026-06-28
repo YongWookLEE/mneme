@@ -4,6 +4,6 @@
   "goal": "운영 호스팅 위치·도메인·Caddy TLS 설정을 결정하고 1대 인스턴스를 띄운다.",
   "milestone": "M9 — 운영 안착",
   "steps": [
-    { "step": 1, "name": "decision", "status": "blocked", "blocked_reason": "사용자가 호스팅 제공자(Hetzner / Fly.io / Backblaze / 자체 VPS / 홈서버)와 도메인을 결정해야 한다. 이메일·B2 계정 등 외부 가입도 사용자 본인 명의로 진행 필요." }
+    { "step": 1, "name": "decision", "status": "deferred", "deferred_reason": "사용자가 당분간 로컬로만 사용. 외부 노출 필요 시점에 호스팅 제공자(Hetzner/Fly.io/자체 VPS) + 도메인 + B2 백업 계정 결정 후 재개." }
   ]
 }

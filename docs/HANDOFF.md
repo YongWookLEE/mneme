@@ -6,7 +6,10 @@
 
 ## 마지막 업데이트
 
-- 시각: 2026-06-28 (phase 31·32 운영 안착 문서·스크립트 완료, phase 30 호스팅 결정만 사용자 대기)
+- 시각: 2026-06-28 — **MVP 코드 작업 일단락**. 사용자가 로컬 단독 사용 단계로 진입(외부 노출 시점 미정).
+- **현재 운영 형태**: `docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d`로 localhost에서만 동작. 외부 클라이언트(Claude Desktop·Codex CLI) 한 종 검증 완료(phase 15 step 1).
+- **다음 작업 트리거**: 사용자가 사용 중 발견한 불편·버그를 보고 → 그 부분만 보정. 또는 외부 노출(호스팅) 결정 → phase 30 재개.
+- **deferred 큐**: phase 30(호스팅 결정), phase 33(사용량 알림), 34(at-rest 암호화), 35(첨부), 36(공유 링크), 37(추가 OAuth), 38(PWA), phase 15 step 2-4(Claude Desktop·ChatGPT·스크린샷).
 - 직전 작업(phase 31 selfhost-guide + phase 32 backup-restore):
   - **phase 31**: `docs/SELFHOST.md`(서버 준비 → Google OAuth 등록 → OpenAI 키 → .env → 첫 키 발급 → MCP 연결 → 점검 → 업데이트 → 데이터 이전) + `docs/TROUBLESHOOTING.md`(부팅·인증·MCP·데이터·LLM·성능 카테고리 자주 막힘 케이스). README 문서 표에 3개 신규 링크 추가.
   - **phase 32**: `deploy/scripts/backup/{backup.sh,restore.sh}` — env 기반 pg_dump → gzip → `aws s3 cp`(B2/R2 호환 `AWS_ENDPOINT_URL`). `deploy/scripts/backup/Dockerfile`(postgres:16-alpine + awscli + dcron) + crontab(03:00 UTC) + `deploy/docker-compose.backup.yml` overlay. `docs/BACKUP.md`(B2 가이드 + 환경변수 + 별도 환경 복원 + 분기 리허설). `mneme-backup:latest` 이미지 빌드 검증 통과.

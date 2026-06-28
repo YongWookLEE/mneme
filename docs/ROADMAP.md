@@ -52,7 +52,7 @@
 
 | Phase | 상태 | 목적 | 메모 |
 |-------|------|------|------|
-| 30 hosting-decision | blocked (사용자) | 호스팅 제공자·도메인 결정 + Caddy 설정 적용 — 사용자 선택 필요 | |
+| 30 hosting-decision | deferred | 호스팅 제공자·도메인 결정 + Caddy 설정 적용 — 외부 노출 시점에 재개 | |
 | 31 selfhost-guide | completed | `docs/SELFHOST.md` 단계별 가이드 + `docs/TROUBLESHOOTING.md` 자주 막힘 케이스 | |
 | 32 backup-restore | completed | `deploy/scripts/backup/{backup,restore}.sh` + Dockerfile + crontab 03:00 UTC + overlay `docker-compose.backup.yml` + `docs/BACKUP.md`(B2 가이드 + 분기 리허설) | |
 | 33 usage-quotas-alerts | deferred | 사용자별 토큰 사용량 대시보드 + 이메일 알림 + 관리자 메트릭 | |
