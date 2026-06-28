@@ -30,7 +30,7 @@ class AuditEvent(
     val targetKind: String? = null,
     @Column(name = "target_id")
     val targetId: String? = null,
-    @Column(name = "ip", columnDefinition = "inet")
+    @Column(name = "ip")
     val ip: String? = null,
     @Column(name = "user_agent")
     val userAgent: String? = null,

@@ -5,8 +5,8 @@
   "milestone": "M6 — 대시보드 사용 가능 (phase 12에서 완성)",
   "steps": [
     { "step": 1, "name": "shell-layout-api",      "status": "completed", "summary": "React Router 6 + TanStack Query 5 도입. Tailwind 모노크롬 토큰(ink-50~900). AuthGate(localStorage `mneme.bearer` 입력 모달). API client(fetch wrapper + 401 자동 키 삭제). Shell/Sidebar/MemoryListPage/MemoryDetailPage/StubPage 라우트. 라이브: 백엔드 REST(/api/folders, /api/memories) Bearer 인증 정상 + npm typecheck/lint/test/build 통과 + Vite dev 5173 200" },
-    { "step": 2, "name": "memory-editor-conflict", "status": "pending", "summary": "" },
-    { "step": 3, "name": "search-archive-keys",    "status": "pending", "summary": "" },
-    { "step": 4, "name": "shortcuts-states-live",  "status": "pending", "summary": "" }
+    { "step": 2, "name": "memory-editor-conflict", "status": "completed", "summary": "react-markdown + remark-gfm + @tailwindcss/typography. MarkdownView 컴포넌트(모노크롬 prose). MemoryDetailPage: 뷰/편집 토글, PATCH mutation(낙관적 락 version 동봉), 409 시 ConflictPanel(서버 본문 vs 내 본문 좌우 + keep mine/take server/manual merge), 보관 액션. 라이브: PATCH 200 + 동일 버전 재PATCH 409 재현 확인" },
+    { "step": 3, "name": "search-archive-keys",    "status": "completed", "summary": "SearchBar(상단 헤더) + SearchPage(/search?q=…). ArchivePage(/archive)에서 보관 목록 + 복구 mutation. KeysPage(/keys)에서 발급/폐기/회전 + Claude Desktop/Codex MCP 연결 명령 빌더. ApiKeyController를 AuthenticatedUserResolver로 통일(Bearer 키도 본인 키 관리 가능). audit_events.ip는 INET→TEXT 보정(V3). 라이브: 검색·키 발급(평문 1회 노출)·폐기 204·아카이브 목록 정상" },
+    { "step": 4, "name": "shortcuts-states-live",  "status": "completed", "summary": "useShortcut 훅(Mod+K 검색바 포커스). 입력 필드 내에서는 단축키 무시(검색바 Mod+K만 예외). 빈/에러/로딩 상태는 페이지별 분기로 통일(라이브에서 시각 확인). M6 절반 — 온보딩 가이드는 phase 12에서" }
   ]
 }

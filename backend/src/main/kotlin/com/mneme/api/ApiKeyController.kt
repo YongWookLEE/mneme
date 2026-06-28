@@ -2,11 +2,9 @@ package com.mneme.api
 
 import com.mneme.auth.ApiKey
 import com.mneme.auth.ApiKeyService
-import com.mneme.auth.UserRepository
 import com.mneme.id.PrefixedId
+import com.mneme.security.AuthenticatedUserResolver
 import org.springframework.http.HttpStatus
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -23,8 +21,8 @@ import java.util.UUID
 /**
  * API 키 관리 REST 컨트롤러.
  *
- * 세션 인증 사용자(OAuth2User)만 접근 가능. 발급 응답(`POST`)만 평문 키를 1회 포함하고,
- * 이후 조회 응답은 절대 평문을 포함하지 않는다.
+ * 인증은 [AuthenticatedUserResolver]가 통일 처리한다 — 세션(OAuth2User) 또는 Bearer 키 모두 허용.
+ * 발급 응답(`POST`)만 평문 키를 1회 포함하고, 이후 조회 응답은 절대 평문을 포함하지 않는다.
  *
  * 외부 ID는 `key_<base32>` 포맷. 내부 UUID 노출 금지.
  */
@@ -32,15 +30,15 @@ import java.util.UUID
 @RequestMapping("/api/keys")
 class ApiKeyController(
     private val apiKeyService: ApiKeyService,
-    private val userRepository: UserRepository,
+    private val userResolver: AuthenticatedUserResolver,
 ) {
+    /** 새 키 발급(평문 1회 노출). */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun issue(
-        @AuthenticationPrincipal principal: OAuth2User,
         @RequestBody body: IssueRequest,
     ): IssueResponse {
-        val userId = userIdFromPrincipal(principal)
+        val userId = userResolver.currentUserId()
         val issued = apiKeyService.issue(userId, body.name)
         return IssueResponse(
             extId = externalKeyId(issued.key.id),
@@ -51,21 +49,20 @@ class ApiKeyController(
         )
     }
 
+    /** 본인 활성 키 목록(평문 미포함). */
     @GetMapping
-    fun list(
-        @AuthenticationPrincipal principal: OAuth2User,
-    ): List<KeyResponse> {
-        val userId = userIdFromPrincipal(principal)
+    fun list(): List<KeyResponse> {
+        val userId = userResolver.currentUserId()
         return apiKeyService.listActive(userId).map { toResponse(it) }
     }
 
+    /** 키 이름 수정. */
     @PatchMapping("/{extId}")
     fun rename(
-        @AuthenticationPrincipal principal: OAuth2User,
         @PathVariable extId: String,
         @RequestBody body: RenameRequest,
     ): KeyResponse {
-        val userId = userIdFromPrincipal(principal)
+        val userId = userResolver.currentUserId()
         val keyId = parseKeyId(extId)
         val ok = apiKeyService.rename(userId, keyId, body.name)
         if (!ok) throw ResponseStatusException(HttpStatus.NOT_FOUND)
@@ -75,25 +72,25 @@ class ApiKeyController(
         return toResponse(updated)
     }
 
+    /** 키 폐기. */
     @DeleteMapping("/{extId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun revoke(
-        @AuthenticationPrincipal principal: OAuth2User,
         @PathVariable extId: String,
     ) {
-        val userId = userIdFromPrincipal(principal)
+        val userId = userResolver.currentUserId()
         val keyId = parseKeyId(extId)
         val ok = apiKeyService.revoke(userId, keyId)
         if (!ok) throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 
+    /** 키 회전 — 기존 키 폐기 + 같은 이름으로 신규 발급. */
     @PostMapping("/{extId}/rotate")
     @ResponseStatus(HttpStatus.CREATED)
     fun rotate(
-        @AuthenticationPrincipal principal: OAuth2User,
         @PathVariable extId: String,
     ): IssueResponse {
-        val userId = userIdFromPrincipal(principal)
+        val userId = userResolver.currentUserId()
         val keyId = parseKeyId(extId)
         val issued = apiKeyService.rotate(userId, keyId) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         return IssueResponse(
@@ -103,11 +100,6 @@ class ApiKeyController(
             prefix = issued.key.prefix,
             createdAt = issued.key.createdAt,
         )
-    }
-
-    private fun userIdFromPrincipal(principal: OAuth2User): UUID {
-        val sub = principal.getAttribute<String>("sub") ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        return userRepository.findByGoogleSub(sub)?.id ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
     }
 
     private fun externalKeyId(id: UUID): String = PrefixedId(PrefixedId.Prefix.API_KEY, id).format()

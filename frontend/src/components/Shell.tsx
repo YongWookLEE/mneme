@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import type { JSX } from "react";
 import { clearBearer } from "../lib/auth";
+import SearchBar from "./SearchBar";
 
 /**
  * 대시보드 쉘 — 헤더 + 좌 사이드 + 본문.
@@ -12,10 +13,11 @@ import { clearBearer } from "../lib/auth";
 export default function Shell(): JSX.Element {
   return (
     <div className="flex h-screen flex-col bg-ink-900 text-ink-100">
-      <header className="flex h-12 items-center justify-between border-b border-ink-700 px-4">
+      <header className="flex h-12 items-center justify-between gap-4 border-b border-ink-700 px-4">
         <Link to="/" className="font-semibold tracking-tight">
           Mneme
         </Link>
+        <SearchBar />
         <nav className="flex items-center gap-1 text-sm text-ink-300">
           <NavLink
             to="/"

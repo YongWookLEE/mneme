@@ -47,6 +47,11 @@
   - TagService + /api/tags + /api/memories/{}/tags: 정규화 소문자, 32자, 메모리당 16개 상한
   - AuthenticatedUserResolver: ApiKeyAuthenticationToken 또는 OAuth2User → userId
   - IsolationRegressionTest 단위 베이스(folder/memory/tag): 다른 userId 접근 시 404 검증
+- Phase 11 dashboard-ui (code + live ✅):
+  - step 2 editor: `react-markdown` + `remark-gfm` + `@tailwindcss/typography` + `MarkdownView`. `MemoryDetailPage` 뷰/편집 + PATCH 낙관적 락 + 409 ConflictPanel(서버/내 본문 좌우 + keep mine/take server/manual merge) + 보관 액션
+  - step 3 search/archive/keys: `SearchBar`+`SearchPage`(/search?q=) + `ArchivePage` + `KeysPage` 발급/폐기/회전 + Claude Desktop/Codex MCP 연결 명령 빌더. `ApiKeyController` Bearer 통일. V3 마이그레이션으로 `audit_events.ip` INET→TEXT
+  - step 4 shortcuts: `useShortcut` 훅(Mod+K 검색바 포커스)
+  - 라이브: 편집/충돌/검색/발급/폐기/아카이브 정상 ✅
 - Phase 11 step 1 dashboard-ui shell:
   - 의존성 `react-router-dom`@6 + `@tanstack/react-query`@5
   - Tailwind 모노크롬 토큰(`ink-50…ink-900`, 보라/푸른기 금지)
