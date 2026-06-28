@@ -21,5 +21,4 @@ body,
 body {
   background: var(--ink-900);
   color: var(--ink-100);
-  font-feature-settings: "ss01", "ss02";
 }

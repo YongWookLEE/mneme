@@ -11,23 +11,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Mneme 모노크롬 토큰. 보라/푸른기 금지. 강조는 밝기 차로.
         ink: {
-          900: "#0a0a0b",
-          800: "#111113",
-          700: "#1a1a1d",
-          600: "#26262a",
-          500: "#3a3a40",
-          400: "#5a5a62",
-          300: "#7e7e87",
-          200: "#a8a8af",
-          100: "#d4d4d7",
-          50: "#f5f5f6",
+          "900": "#0a0a0b",
+          "800": "#111113",
+          "700": "#1a1a1d",
+          "600": "#26262a",
+          "500": "#3a3a40",
+          "400": "#5a5a62",
+          "300": "#7e7e87",
+          "200": "#a8a8af",
+          "100": "#d4d4d7",
+          "50": "#f5f5f6",
         },
-      },
-      fontFamily: {
-        sans: ["ui-sans-serif", "system-ui", "Pretendard", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "monospace"],
       },
     },
   },
